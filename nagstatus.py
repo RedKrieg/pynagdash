@@ -26,7 +26,7 @@ def get_nag_status(file, threshold = 0):
     this_service = None
     group_type = None
 
-    while line:
+    for line in f:
         if line.strip().endswith('{'):
             group_type = line.strip().split()[0]
         try:
@@ -53,7 +53,7 @@ def get_nag_status(file, threshold = 0):
                         del host_statuses[this_host][this_service]
         except:
             pass
-        line = f.readline()
+    f.close()
     return host_statuses
 
 if __name__ == "__main__":
