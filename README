@@ -1,0 +1,8 @@
+Written for the good of humanity by Brandon Whaley (redkrieg@gmail.com).  Use as you wish in this capacity.
+
+Right now, just a simple library file called nagstatus.py.  Calling nagstatus.get_nag_status("/path/to/status.dat") will return a dict object of the following format:
+return_object[host_name]['HOST' or service_name][property]
+
+Properties are straight from status.dat, nothing fancy here
+
+(Ab)uses try in multiple ways in the 'better to ask forgiveness' spirit.
