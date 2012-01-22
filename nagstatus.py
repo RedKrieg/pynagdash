@@ -3,6 +3,8 @@
 def get_property(line):
     line_split = line.strip().split('=')
     #returns the property name and remaining data recombined after the split above
+    if len(line_split) < 2:
+        raise Exception("Line is not a key/value pair.")
     return line_split[0], '='.join(line_split[1:])
 
 def try_to_convert(value):
@@ -29,6 +31,7 @@ def get_nag_status(file, threshold = 0):
     for line in f:
         if line.strip().endswith('{'):
             group_type = line.strip().split()[0]
+            continue
         try:
             property, value = get_property(line) #fails on lines without =, the try makes us pass
             #not yet reading programstatus or info
@@ -46,6 +49,8 @@ def get_nag_status(file, threshold = 0):
                 elif property == 'service_description':
                     this_service = value
                     host_statuses[this_host][this_service] = {}
+                    host_statuses[this_host][this_service][property] = value #handy place to have the service description and host name
+                    host_statuses[this_host][this_service]['host_name'] = this_host
                 else:
                     host_statuses[this_host][this_service][property] = try_to_convert(value)
                     if property == 'current_state' and host_statuses[this_host][this_service][property] < threshold:
