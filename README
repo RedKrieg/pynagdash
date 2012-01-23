@@ -6,3 +6,6 @@ return_object[host_name]['HOST' or service_name][property]
 Properties are straight from status.dat, nothing fancy here
 
 (Ab)uses try in multiple ways in the 'better to ask forgiveness' spirit.
+
+
+flaskapp.py requires flask, uses jquery and jquery-tablesorter (not included).  At this stage, everything is VERY 'playground'
