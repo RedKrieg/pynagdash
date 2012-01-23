@@ -1,0 +1,36 @@
+<html lang="en">
+    <head>
+        <title>Nagios Dashboard</title>
+        <link rel="stylesheet" href="/static/themes/blue/style.css" type="text/css" id="" media="print, projection, screen" />
+        <script type="text/javascript" src="/static/jquery-1.7.1.min.js"></script>
+        <script type="text/javascript" src="/static/jquery.tablesorter.min.js"></script>
+        <script type="text/javascript" id="js">
+
+            $(document).ready(function() {
+
+                $("table").tablesorter();
+
+            });         
+
+        </script>
+    </head>
+    <body>
+        <table cellspacing="1" class="tablesorter">
+            <thead>
+                <tr>
+                    <th>Host</th>
+                    <th>Service</th>
+                    <th>Status</th>
+                    <th>Duration</th>
+                    <th>Attempt</th>
+                    <th>Output<th>
+                </tr>
+            </thead>
+            <tbody>
+                {% autoescape false %}
+                {{ data }}
+                {% endautoescape %}
+            </tbody>
+        </table>
+    </body>
+</html>
