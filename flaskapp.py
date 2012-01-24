@@ -5,16 +5,21 @@ import datetime, time
 app = Flask(__name__)
 cache = SimpleCache()
 
+STATE_OK = 0
+STATE_WARNING = 1
+STATE_CRITICAL = 2
+STATE_UNKNOWN = 3
+
 def parse_row(service_dict):
     """Parses out important service data to a tuple"""
     state_val = service_dict['current_state']
-    if state_val == 0:
+    if state_val == STATE_OK:
         state_name = "OK"
         state_column = 'last_time_ok'
-    elif state_val == 1:
+    elif state_val == STATE_WARNING:
         state_name = "WARNING"
         state_column = 'last_time_warning'
-    elif state_val == 2:
+    elif state_val == STATE_CRITICAL:
         state_name = "CRITICAL"
         state_column = 'last_time_critical'
     else:
@@ -23,23 +28,13 @@ def parse_row(service_dict):
     duration = time.time() - service_dict[state_column]
     return (service_dict['host_name'], service_dict['service_description'], state_name, str(duration), "%s/%s" % (service_dict['current_attempt'], service_dict['max_attempts']), service_dict['plugin_output'])
 
-def current_nag_status():
-    status = cache.get('nag-status')
+def cached_nag_status(status_file = '/root/projects/dashboard/status.dat', level = STATE_CRITICAL):
+    """Tries to get current nag status from cache, regenerates and updates cache on failure."""
+    status = cache.get('nag-status-%s' % level)
     if status is None:
-        status = get_nag_status('/root/projects/dashboard/status.dat', 1)
-        cache.set('nag-status', status, timeout=10)
+        status = get_nag_status(status_file, level)
+        cache.set('nag-status-%s' % level, status, timeout=10)
     return status
-
-def get_view_data():
-    nag_status = current_nag_status()
-    crit_services = []
-    for host in nag_status.keys():
-        for service in nag_status[host].keys():
-            if service == 'HOST':
-                continue
-            crit_services.append("<td>%s</td>" % "</td>\n<td>".join(parse_row(nag_status[host][service])))
-    crit_services.sort(key=lambda x: float(x.split('</td>\n<td>')[3]), reverse=True)
-    return "<tr>%s</tr>" % "</tr>\n<tr>".join(crit_services)
 
 @app.route("/")
 def index():
@@ -47,7 +42,24 @@ def index():
 
 @app.route("/view/<view_name>")
 def show_view(view_name):
-    return render_template('view_test.html', nag_status=current_nag_status(), parse_row=parse_row)
+    if view_name == 'index':
+        return render_template('view_test.html', nag_status=cached_nag_status(), parse_row=parse_row)
+    return 'not implemented'
+
+@app.route("/api/tbody")
+@app.route("/api/tbody/<level>")
+def api_tbody(level = 'critical'):
+    level = level.lower()
+    if "ok" in level:
+        cache_level = STATE_OK
+    elif "warn" in level:
+        cache_level = STATE_WARNING
+    elif "crit" in level:
+        cache_level = STATE_CRITICAL
+    else:
+        cache_level = STATE_UNKNOWN
+
+    return render_template('api_tbody.html', nag_status=cached_nag_status(level=cache_level), parse_row=parse_row)
 
 if __name__ == "__main__":
     app.run(debug=True, use_debugger=False)
