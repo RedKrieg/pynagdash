@@ -1,7 +1,7 @@
 from flask import Flask, url_for, render_template
 from nagstatus import get_nag_status
 from werkzeug.contrib.cache import SimpleCache
-import datetime, time
+import time, json
 app = Flask(__name__)
 cache = SimpleCache()
 
@@ -36,6 +36,20 @@ def cached_nag_status(status_file = '/root/projects/dashboard/status.dat', level
         cache.set('nag-status-%s' % level, status, timeout=10)
     return status
 
+def parse_level(level):
+    """Converts text level to integer"""
+    level = level.lower()
+    if "ok" in level:
+        cache_level = STATE_OK
+    elif "warn" in level:
+        cache_level = STATE_WARNING
+    elif "crit" in level:
+        cache_level = STATE_CRITICAL
+    else:
+        cache_level = STATE_UNKNOWN
+
+    return cache_level
+
 @app.route("/")
 def index():
     return show_view('index')
@@ -49,17 +63,20 @@ def show_view(view_name):
 @app.route("/api/tbody")
 @app.route("/api/tbody/<level>")
 def api_tbody(level = 'critical'):
-    level = level.lower()
-    if "ok" in level:
-        cache_level = STATE_OK
-    elif "warn" in level:
-        cache_level = STATE_WARNING
-    elif "crit" in level:
-        cache_level = STATE_CRITICAL
-    else:
-        cache_level = STATE_UNKNOWN
-
+    cache_level = parse_level(level)
     return render_template('api_tbody.html', nag_status=cached_nag_status(level=cache_level), parse_row=parse_row)
 
+@app.route("/api/json")
+@app.route("/api/json/<level>")
+def api_json(level = 'critical'):
+    cache_level = parse_level(level)
+    nag_status = cached_nag_status(level=cache_level)
+    output_array = []
+    for host in nag_status:
+        for service in nag_status[host]:
+            if service != 'HOST':
+                output_array.append(parse_row(nag_status[host][service]))
+    return json.dumps(output_array)
+
 if __name__ == "__main__":
-    app.run(debug=True, use_debugger=False)
+    app.run(debug=True, use_debugger=True)

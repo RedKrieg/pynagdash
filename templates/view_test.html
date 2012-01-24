@@ -3,19 +3,50 @@
         <title>Nagios Dashboard</title>
         <link rel="stylesheet" href="/static/themes/blue/style.css" type="text/css" id="" media="print, projection, screen" />
         <script type="text/javascript" src="/static/jquery-1.7.1.min.js"></script>
-        <script type="text/javascript" src="/static/jquery.tablesorter.min.js"></script>
+        <script type="text/javascript" src="/static/jquery.dataTables.min.js"></script>
         <script type="text/javascript" id="js">
+
+            function update_table() {
+                $.getJSON('/api/json', function(data) {
+                    //$("table tbody").html(data);
+                    //$("table").trigger("update");
+                    //var sorting = [[3,1]]
+                    //$("table").trigger("sorton",[sorting]);
+                    //$('.viewtable').dataTable().fnDraw();
+                    var rTable = $('.viewtable').dataTable();
+
+                    // update table content
+                    rTable.fnClearTable();
+                    rTable.fnAddData(data);
+                    return false
+                });
+                return false
+            }
 
             $(document).ready(function() {
 
-                $("table").tablesorter();
+                //$("table").tablesorter({ 
+                //    // sort on the first column and third column, order asc 
+                //    sortList: [[3,1]]
+                //});
 
-            });         
+                $('.viewtable').dataTable( {
+                    "bPaginate": false,
+                    "bLengthChange": true,
+                    "bInfo": false,
+                    "bFilter": false,
+                    "bAutoWidth": true,
+                    "aaSorting": [[ 3, "desc" ]]
+                } );
+
+            });
+
+            setInterval('update_table()',10000);
 
         </script>
     </head>
     <body>
-        <table cellspacing="1" class="tablesorter">
+        <table cellspacing="1" class="viewtable">
             <thead>
                 <tr>
                     <th>Host</th>
@@ -23,7 +54,7 @@
                     <th>Status</th>
                     <th>Duration</th>
                     <th>Attempt</th>
-                    <th>Output<th>
+                    <th>Output</th>
                 </tr>
             </thead>
             <tbody>
