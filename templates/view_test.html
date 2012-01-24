@@ -27,9 +27,19 @@
                 </tr>
             </thead>
             <tbody>
-                {% autoescape false %}
-                {{ data }}
-                {% endautoescape %}
+                {% for host in nag_status %}
+                    {% for service in nag_status[host] %}
+                        {% if service != 'HOST' %}
+                <tr>
+                            {% for column in parse_row(nag_status[host][service]) %}
+                    <td>
+                        {{ column }}
+                    </td>
+                            {% endfor %}
+                </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
             </tbody>
         </table>
     </body>

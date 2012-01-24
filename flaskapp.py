@@ -38,7 +38,8 @@ def get_view_data():
             if service == 'HOST':
                 continue
             crit_services.append("<td>%s</td>" % "</td>\n<td>".join(parse_row(nag_status[host][service])))
-    return "<tr>%s</tr>" % "</tr>\n<tr>".join(sorted(crit_services, key=lambda x: float(x.split('</td>\n<td>')[3]), reverse=True))
+    crit_services.sort(key=lambda x: float(x.split('</td>\n<td>')[3]), reverse=True)
+    return "<tr>%s</tr>" % "</tr>\n<tr>".join(crit_services)
 
 @app.route("/")
 def index():
@@ -46,7 +47,7 @@ def index():
 
 @app.route("/view/<view_name>")
 def show_view(view_name):
-    return render_template('view_test.html', data=get_view_data())
+    return render_template('view_test.html', nag_status=current_nag_status(), parse_row=parse_row)
 
 if __name__ == "__main__":
     app.run(debug=True, use_debugger=False)
