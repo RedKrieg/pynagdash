@@ -15,6 +15,12 @@ STATE_UNKNOWN = 3
 test_filter_names = ["problem", "load"]
 test_output_names = ["tbody", "json"]
 
+def try_float(num):
+    try:
+        return float(num)
+    except:
+        return num
+
 def parse_row(service_dict):
     """Parses out important service data to a tuple"""
     state_val = service_dict['current_state']
@@ -84,12 +90,41 @@ def api_json(level = 'critical', nag_status = None):
                 output_array.append(parse_row(nag_status[host][service]))
     return json.dumps(output_array)
 
+def apply_filter(rule_group, service):
+    """Applies a recursive rule test against [service]"""
+    for rule in rule_group:
+        try:
+            operator = rule['operator']
+            field = rule['field']
+            chain = rule['chain']
+            child = rule['child']
+            value = rule['value']
+            service_data = service[field]
+        except:
+            return False
+        if operator == '=':
+            return service_data == try_float(value)
+        #fill in the other comparison operators here
+        elif operator == 'regex':
+            return re.search(value, service_data)
+        elif operator == 'regexchild':
+            return apply_filter(child, re.search(value, service_data).groups())
+        elif operator == 'child':
+            pass
+        return False
+    return False
+
 def filter_data(filter, nag_data = None, level = 'critical'):
     """Applies [filter] to [nag_data]"""
     if not nag_data:
         cache_level = parse_level(level)
         nag_data = cached_nag_status(level = cache_level)
-    #Need to actually apply filter here!!!!!
+    
+
+
+
+
+
     return nag_data
 
 @app.route("/api/filter/<filter>")
