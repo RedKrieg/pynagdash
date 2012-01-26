@@ -1,20 +1,28 @@
 [
     {
-        'field': "is_flapping",
-        'operator': "=",
-        'value': "1",
-        'chain': "AND"
-    },
+        "operator": "=", 
+        "field": "is_flapping", 
+        "chain": "AND", 
+        "value": 1, 
+        "child": null
+    }, 
     {
-        'field': "plugin_output",
-        'operator': "regex",
-        'value': "load average: ([0-9\.]+), ([0-9\.]+), ([0-9\.]+)",
-        'child':
-        [
+        "operator": "regex", 
+        "field": "plugin_output", 
+        "chain": null, 
+        "value": "load average: ([0-9\\.]+), ([0-9\\.]+), ([0-9\\.]+)", 
+        "child": [
             {
-                'field': 0,
-                'operator': '>=',
-                'value': 20
+                "operator": ">=", 
+                "field": 0, 
+                "chain": "OR", 
+                "value": 20
+            }, 
+            {
+                "operator": ">=", 
+                "field": 2, 
+                "chain": null, 
+                "value": 50
             }
         ]
     }
