@@ -1,3 +1,5 @@
+#!/bin/env python2.7
+
 from flask import Flask, url_for, render_template
 from nagstatus import get_nag_status
 from werkzeug.contrib.cache import SimpleCache
@@ -9,6 +11,9 @@ STATE_OK = 0
 STATE_WARNING = 1
 STATE_CRITICAL = 2
 STATE_UNKNOWN = 3
+
+test_filter_names = ["problem", "load"]
+test_output_names = ["tbody", "json"]
 
 def parse_row(service_dict):
     """Parses out important service data to a tuple"""
@@ -68,15 +73,42 @@ def api_tbody(level = 'critical'):
 
 @app.route("/api/json")
 @app.route("/api/json/<level>")
-def api_json(level = 'critical'):
-    cache_level = parse_level(level)
-    nag_status = cached_nag_status(level=cache_level)
+def api_json(level = 'critical', nag_status = None):
+    if not nag_status:
+        cache_level = parse_level(level)
+        nag_status = cached_nag_status(level=cache_level)
     output_array = []
     for host in nag_status:
         for service in nag_status[host]:
             if service != 'HOST':
                 output_array.append(parse_row(nag_status[host][service]))
     return json.dumps(output_array)
+
+def filter_data(filter, nag_data = None, level = 'critical'):
+    """Applies [filter] to [nag_data]"""
+    if not nag_data:
+        cache_level = parse_level(level)
+        nag_data = cached_nag_status(level = cache_level)
+    #Need to actually apply filter here!!!!!
+    return nag_data
+
+@app.route("/api/filter/<filter>")
+@app.route("/api/filter/<filter>/<level>")
+@app.route("/api/filter/<filter>/<format>/<level>")
+def api_filter(filter, level = 'critical', format = 'json'):
+    """filters data and formats/chooses level if requested"""
+    filter = filter.lower()
+    if filter in test_filter_names:
+        nag_status = filter_data(filter, level)
+        if format == 'json':
+            return api_json(nag_status)
+        elif format == 'tbody':
+            return api_tbody(nag_status)
+        else:
+            return """syntax is:<br>
+@app.route("/api/filter/<filter>")<br>
+@app.route("/api/filter/<filter>/<level>")<br>
+@app.route("/api/filter/<filter>/<format>/<level>")"""
 
 if __name__ == "__main__":
     app.run(debug=True, use_debugger=True)

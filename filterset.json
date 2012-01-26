@@ -1,0 +1,21 @@
+[
+    {
+        'field': "is_flapping",
+        'operator': "=",
+        'value': "1",
+        'chain': "AND"
+    },
+    {
+        'field': "plugin_output",
+        'operator': "regex",
+        'value': "load average: ([0-9\.]+), ([0-9\.]+), ([0-9\.]+)",
+        'child':
+        [
+            {
+                'field': 0,
+                'operator': '>=',
+                'value': 20
+            }
+        ]
+    }
+]
