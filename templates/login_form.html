@@ -9,7 +9,7 @@
         <label for='password' >Password*:</label>
         <input type='password' name='password' id='password' maxlength="50" />
         <input type='submit' name='Submit' value='Submit' />
-        {% if error is not None %}<div class='error'>{{ error }}</div>{% endif %}
+        {% if error is not none %}<div class='error'>{{ error }}</div>{% endif %}
     </fieldset>
 </form>
 {% endblock %}
