@@ -40,7 +40,7 @@ def parse_row(service_dict):
     duration = time.time() - service_dict[state_column]
     return (service_dict['host_name'], service_dict['service_description'], state_name, str(duration), "%s/%s" % (service_dict['current_attempt'], service_dict['max_attempts']), service_dict['plugin_output'])
 
-def cached_nag_status(status_file = '/root/projects/dashboard/status.dat', level = STATE_CRITICAL):
+def cached_nag_status(status_file = app.config['STATUS_FILE'], level = STATE_CRITICAL):
     """Tries to get current nag status from cache, regenerates and updates cache on failure."""
     status = cache.get('nag-status-%s' % level)
     if status is None:
