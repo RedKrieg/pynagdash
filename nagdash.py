@@ -69,7 +69,7 @@ def require_login(func):
     def decorated_func(*args, **kwargs):
         if g.user is None:
             return redirect(url_for('login', next=request.url)
-        return f(*args, **kwargs)
+        return func(*args, **kwargs)
     return decorated_func
 
 def check_credentials(username, password):
