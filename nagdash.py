@@ -1,6 +1,6 @@
 #!/bin/env python2.7
 
-from flask import Flask, url_for, render_template, g, redirect, flash
+from flask import Flask, url_for, render_template, g, redirect, flash, request
 from nagstatus import get_nag_status
 from werkzeug.contrib.cache import SimpleCache
 from functools import wraps
