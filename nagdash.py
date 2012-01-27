@@ -90,7 +90,6 @@ def login(next = "/"):
         try:
             if check_credentials(request.form['username'], request.form['password']):
                 session['username'] = request.form['username']
-                flash('LOG IN SUCCEED!')
                 return redirect(next)
             else:
                 error="Invalid user name and/or password."
@@ -98,7 +97,13 @@ def login(next = "/"):
             error="Invalid data passed to login form."
     return render_template('login_form.html', error=error, next=next)
 
+@app.route("/logout")
+def logout():
+    session['username'] = None
+    return redirect(url_for('login'))
+
 @app.route("/view/<view_name>")
+@require_login
 def show_view(view_name):
     if view_name == 'index':
         return render_template('view_test.html', nag_status=cached_nag_status(), parse_row=parse_row)
@@ -106,12 +111,14 @@ def show_view(view_name):
 
 @app.route("/api/tbody")
 @app.route("/api/tbody/<level>")
+@require_login
 def api_tbody(level = 'critical'):
     cache_level = parse_level(level)
     return render_template('api_tbody.html', nag_status=cached_nag_status(level=cache_level), parse_row=parse_row)
 
 @app.route("/api/json")
 @app.route("/api/json/<level>")
+@require_login
 def api_json(nag_status = None, level = 'critical'):
     if not nag_status:
         cache_level = parse_level(level)
@@ -206,6 +213,7 @@ def filter_data(filter, nag_data = None, level = 'critical'):
 @app.route("/api/filter/<filter>")
 @app.route("/api/filter/<filter>/<level>")
 @app.route("/api/filter/<filter>/<format>/<level>")
+@require_login
 def api_filter(filter, level = 'critical', format = 'json'):
     """filters data and formats/chooses level if requested"""
     filter = filter.lower()
