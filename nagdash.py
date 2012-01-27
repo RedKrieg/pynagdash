@@ -95,8 +95,8 @@ def login(next = "/"):
             else:
                 error="Invalid user name and/or password."
         except:
-            error="Invalid data passed to login form."
-    return render_template('login_form.html', error=error)
+            error="Invalid data passed to login form.%s" % request
+    return render_template('login_form.html', error=error, next=next)
 
 @app.route("/view/<view_name>")
 def show_view(view_name):
