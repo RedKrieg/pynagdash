@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<form id='login' action = "{{ url_for('login', next=next) }}" method='post'>
+    <fieldset >
+        <legend>Login</legend>
+        <label for='username' >UserName*:</label>
+        <input type='text' name='username' id='username'  maxlength="50" />
+        <label for='password' >Password*:</label>
+        <input type='password' name='password' id='password' maxlength="50" />
+        <input type='submit' name='Submit' value='Submit' />
+        {% if error is not None %}<div class='error'>{{ error }}</div>{% endif %}
+    </fieldset>
+</form>
+{% endblock %}

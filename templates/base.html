@@ -1,0 +1,16 @@
+<html lang="en">
+    <head>
+        {% block head %}
+        <link rel="stylesheet" href="style.css" />
+        <title>{% block title %}{% endblock %} - Nag Dash</title>
+        {% endblock %}
+    </head>
+    <body>
+        <div id="content">{% block content %}{% endblock %}</div>
+        <div id="footer">
+            {% block footer %}
+            &copy; Copyright 2012 by <a href="http://redkrieg.com/">RedKrieg</a>.
+            {% endblock %}
+        </div>
+    </body>
+</html>
