@@ -68,7 +68,7 @@ def require_login(func):
     @wraps(func)
     def decorated_func(*args, **kwargs):
         if g.user is None:
-            return redirect(url_for('login', next=request.url)
+            return redirect(url_for('login', next=request.url))
         return func(*args, **kwargs)
     return decorated_func
 
