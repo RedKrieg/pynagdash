@@ -1,6 +1,6 @@
 #!/bin/env python2.7
 
-from flask import Flask, url_for, render_template, g, redirect, flash, request
+from flask import Flask, url_for, render_template, g, redirect, flash, request, session
 from nagstatus import get_nag_status
 from werkzeug.contrib.cache import SimpleCache
 from functools import wraps
@@ -68,7 +68,7 @@ def require_login(func):
     @wraps(func)
     def decorated_func(*args, **kwargs):
         try:
-            if g.user is not None:
+            if session['username'] is not None:
                 return func(*args, **kwargs)
         except:
             pass
@@ -89,13 +89,13 @@ def login(next = "/"):
     if request.method == 'POST':
         try:
             if check_credentials(request.form['username'], request.form['password']):
-                g.user = request.form['username']
+                session['username'] = request.form['username']
                 flash('LOG IN SUCCEED!')
-                return redirect(url_for(next))
+                return redirect(next)
             else:
                 error="Invalid user name and/or password."
         except:
-            error="Invalid data passed to login form.%s" % request
+            error="Invalid data passed to login form."
     return render_template('login_form.html', error=error, next=next)
 
 @app.route("/view/<view_name>")
