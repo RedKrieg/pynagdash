@@ -2,7 +2,7 @@
     {
         "operator": "=", 
         "field": "is_flapping", 
-        "chain": "AND", 
+        "chain": "OR", 
         "value": 1, 
         "child": null
     }, 
@@ -16,14 +16,14 @@
                 "operator": ">=", 
                 "field": 0, 
                 "chain": "OR", 
-                "value": 20,
+                "value": 2,
                 "child": null
             }, 
             {
                 "operator": ">=", 
                 "field": 2, 
                 "chain": null, 
-                "value": 50,
+                "value": 5,
                 "child": null
             }
         ]
