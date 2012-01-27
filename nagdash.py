@@ -1,8 +1,9 @@
 #!/bin/env python2.7
 
-from flask import Flask, url_for, render_template
+from flask import Flask, url_for, render_template, g, redirect, flash
 from nagstatus import get_nag_status
 from werkzeug.contrib.cache import SimpleCache
+from functools import wraps
 import time, json, re
 app = Flask(__name__)
 app.config.from_pyfile('nagdash.cfg')
@@ -62,9 +63,37 @@ def parse_level(level):
 
     return cache_level
 
+def require_login(func):
+    """Decorates a function to require login"""
+    @wraps(func)
+    def decorated_func(*args, **kwargs):
+        if g.user is None:
+            return redirect(url_for('login', next=request.url)
+        return f(*args, **kwargs)
+    return decorated_func
+
+def check_credentials(username, password):
+    return username == 'user' and password == 'pass'
+
 @app.route("/")
+@require_login
 def index():
     return show_view('index')
+
+@app.route("/login", methods=['GET', 'POST'])
+def login(next = "/"):
+    error = None
+    if request.method == 'POST':
+        try:
+            if check_credentials(request.form['username'], request.form['password']):
+                g.user = request.form['username']
+                flash('LOG IN SUCCEED!')
+                return redirect(url_for(next))
+            else:
+                error="Invalid user name and/or password."
+        except:
+            error="Invalid data passed to login form."
+    return render_template('login_form.html', error=error)
 
 @app.route("/view/<view_name>")
 def show_view(view_name):
