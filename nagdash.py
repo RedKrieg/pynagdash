@@ -5,6 +5,7 @@ from nagstatus import get_nag_status
 from werkzeug.contrib.cache import SimpleCache
 import time, json, re
 app = Flask(__name__)
+app.config.from_pyfile('nagdash.cfg')
 cache = SimpleCache()
 
 STATE_OK = 0
@@ -189,4 +190,4 @@ def api_filter(filter, level = 'critical', format = 'json'):
 @app.route("/api/filter/<filter>/<format>/<level>")"""
 
 if __name__ == "__main__":
-    app.run(debug=True, use_debugger=True)
+    app.run()
