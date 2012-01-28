@@ -150,7 +150,7 @@ def logout():
 @require_login
 def show_view(view_name):
     if view_name == 'index':
-        return render_template('view_base.html', parse_row=parse_row, session['username'])
+        return render_template('view_base.html', parse_row=parse_row)
     return 'not implemented'
 
 @app.route("/api/tbody")
