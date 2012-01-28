@@ -6,38 +6,52 @@
         <script type="text/javascript" src="/static/jquery.dataTables.min.js"></script>
         <script type="text/javascript" id="js">
 
+            function set_color_classes() {
+
+                $("table.viewtable td").each(function (i) {
+                    if ($(this).text() == "CRITICAL") {
+                        $(this).parent().addClass("critical")
+                    } else if($(this).text() == "OK") {
+                        $(this).parent().addClass("ok")
+                    } else if($(this).text() == "WARNING") {
+                        $(this).parent().addClass("warning")
+                    } else if($(this).text() == "UNKNOWN") {
+                        $(this).parent().addClass("unknown")
+                    }
+                });
+                return false
+            }
+
             function update_table() {
-                $.getJSON('/api/json', function(data) {
-                    //$("table tbody").html(data);
-                    //$("table").trigger("update");
-                    //var sorting = [[3,1]]
-                    //$("table").trigger("sorton",[sorting]);
-                    //$('.viewtable').dataTable().fnDraw();
+
+                $.getJSON($('.viewtable tbody').data('source'), function(data) {
+
                     var rTable = $('.viewtable').dataTable();
 
                     // update table content
                     rTable.fnClearTable();
                     rTable.fnAddData(data);
+                    set_color_classes()
                     return false
+
                 });
+
                 return false
+
             }
 
             $(document).ready(function() {
-
-                //$("table").tablesorter({ 
-                //    // sort on the first column and third column, order asc 
-                //    sortList: [[3,1]]
-                //});
 
                 $('.viewtable').dataTable( {
                     "bPaginate": false,
                     "bLengthChange": true,
                     "bInfo": false,
                     "bFilter": false,
-                    "bAutoWidth": true,
+                    "bAutoWidth": false,
                     "aaSorting": [[ 3, "desc" ]]
                 } );
+
+                update_table()
 
             });
 
@@ -57,8 +71,7 @@
                     <th>Output</th>
                 </tr>
             </thead>
-            <tbody>
-                {% include 'api_tbody.html' %}
+            <tbody data-source='/api/json'>
             </tbody>
         </table>
     </body>
