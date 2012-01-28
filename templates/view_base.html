@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Dashboard view for {{ session['username'] }}{% endblock %}
+{% block head %}
+    {{ super() }}
+    <script type="text/javascript" src="/static/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/static/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" id="js">
+
+        function set_color_classes(table) {
+
+            table.children("tbody tr td").each(function (i) {
+                if ($(this).text() == "CRITICAL") {
+                    $(this).parent().addClass("critical");
+                } else if($(this).text() == "OK") {
+                    $(this).parent().addClass("ok");
+                } else if($(this).text() == "WARNING") {
+                    $(this).parent().addClass("warning");
+                } else if($(this).text() == "UNKNOWN") {
+                    $(this).parent().addClass("unknown");
+                }
+            });
+
+            return false;
+
+        }
+
+        function update_table(table) {
+
+            $.getJSON(table.children('tbody').data('source'), function(data) {
+
+                var rTable = table.dataTable();
+
+                // update table content
+                rTable.fnClearTable();
+                rTable.fnAddData(data);
+                set_color_classes(table);
+
+                return false;
+
+                }).error(function() {
+
+                    $('#msgBox div').text("Couldn't update status!  Check login and the backend!")
+                    .slideDown('medium')
+                    .delay(3000)
+                    .slideUp('medium');
+
+                });
+
+                return false;
+
+            }
+
+            function update_tables() {
+
+                $('.viewtable').each(function() {
+                    update_table(this);
+                });
+                return false;
+
+            }
+
+            $(document).ready(function() {
+
+                $('#msgBox div').hide();
+
+                $('.viewtable').dataTable( {
+                    "bPaginate": false,
+                    "bLengthChange": true,
+                    "bInfo": false,
+                    "bFilter": false,
+                    "bAutoWidth": false,
+                    "aaSorting": [[ 3, "desc" ]]
+                } );
+
+                update_tables();
+
+            });
+
+            setInterval('update_tables()',10000);
+
+        </script>
+{% endblock %}
+{% block content %}
+        <div id="msgBox"><div></div></div>
+        <table cellspacing="1" class="viewtable">
+            <thead>
+                <tr>
+                    <th>Host</th>
+                    <th>Service</th>
+                    <th>Status</th>
+                    <th>Duration</th>
+                    <th>Attempt</th>
+                    <th>Output</th>
+                </tr>
+            </thead>
+            <tbody data-source='/api/json'>
+            </tbody>
+        </table>
+{% endblock %}
+</html>
