@@ -85,7 +85,7 @@ def check_credentials(username, password):
         return check_password_hash(user['PASSWORD'], password)
 
 def create_user(username, password):
-    return query_db("insert into `users` (`USER`, `PASSWORD`) VALUES (?, ?)", [username, generate_password_hash(password)])
+    return query_db("insert into users VALUES (?,?)", [username, generate_password_hash(password)])
 
 def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
