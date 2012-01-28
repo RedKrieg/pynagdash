@@ -85,7 +85,7 @@ def check_credentials(username, password):
         return check_password_hash(user['PASSWORD'], password)
 
 def create_user(username, password):
-    query_db("insert into `users` (`USER`, `PASSWORD`) VALUES (?, ?)", [username, generate_password_hash(password)])
+    return query_db("insert into `users` (`USER`, `PASSWORD`) VALUES (?, ?)", [username, generate_password_hash(password)])
 
 def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
@@ -128,7 +128,8 @@ def login(next = "/"):
         error="No users exist, please create one now."
         init_db()
         if request.method == 'POST':
-            create_user(request.form['username'], request.form['password'])
+            error=str(create_user(request.form['username'], request.form['password']))
+            return render_template('login_form.html', error=error, next=next)
     if request.method == 'POST':
         try:
             if check_credentials(request.form['username'], request.form['password']):
