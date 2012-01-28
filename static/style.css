@@ -50,3 +50,9 @@ table.viewtable thead tr .headerSortDown {
 table.viewtable thead tr .headerSortDown, table.viewtable thead tr .headerSortUp {
 background-color: #8dbdd8;
 }
+/*divs*/
+#msgBox {
+background-color:yellow;
+text-align: center;
+border-radius: 10px;
+}
