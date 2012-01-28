@@ -123,7 +123,7 @@ def index():
 def login(next = "/"):
     error = None
     # Check if any users exist:
-    if query_db('select count(*) from users', one=True)[0] == 0:
+    if query_db('select count(*) from users', one=True) == 0:
         error="No users exist, please create one now."
         init_db()
         if request.method == 'POST':
