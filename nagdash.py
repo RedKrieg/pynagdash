@@ -78,7 +78,7 @@ def require_login(func):
     return decorated_func
 
 def check_credentials(username, password):
-    user = query_db('select * from users where username = ?', [username], one=True)
+    user = query_db('select * from users where USER = ?', [username], one=True)
     if user is None:
         return False
     else:
@@ -123,7 +123,7 @@ def index():
 def login(next = "/"):
     error = None
     # Check if any users exist:
-    if not query_db('select count(*) from users', one=True):
+    if query_db('select count(*) from users', one=True)[0] == 0:
         error="No users exist, please create one now."
         init_db()
         if request.method == 'POST':
