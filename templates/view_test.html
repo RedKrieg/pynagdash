@@ -34,6 +34,13 @@
                     set_color_classes()
                     return false
 
+                }).error(function() {
+
+                    $('#msgBox').text("Couldn't update status!  Check login and the backend!")
+                    .slideDown('medium')
+                    .delay(3000)
+                    .slideUp('medium');
+
                 });
 
                 return false
@@ -41,6 +48,8 @@
             }
 
             $(document).ready(function() {
+
+                $('#msgBox').hide();
 
                 $('.viewtable').dataTable( {
                     "bPaginate": false,
@@ -60,6 +69,7 @@
         </script>
     </head>
     <body>
+        <div id="msgBox"></div>
         <table cellspacing="1" class="viewtable">
             <thead>
                 <tr>
