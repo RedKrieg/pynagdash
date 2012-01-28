@@ -3,8 +3,10 @@
 from flask import Flask, url_for, render_template, g, redirect, flash, request, session
 from nagstatus import get_nag_status
 from werkzeug.contrib.cache import SimpleCache
+from werkzeug.security import generate_password_hash, check_password_hash
+from contextlib import closing
 from functools import wraps
-import time, json, re
+import time, json, re, sqlite3
 app = Flask(__name__)
 app.config.from_pyfile('nagdash.cfg')
 cache = SimpleCache()
@@ -76,7 +78,38 @@ def require_login(func):
     return decorated_func
 
 def check_credentials(username, password):
-    return username == 'user' and password == 'pass'
+    user = query_db('select * from users where username = ?', [username], one=True)
+    if user is None:
+        return False
+    else:
+        return check_password_hash(user['PASSWORD'], password)
+
+def create_user(username, password):
+    query_db("insert into `users` (`USER`, `PASS`) VALUES ('?', '?')", [username, generate_password_hash(password)])
+
+def connect_db():
+    return sqlite3.connect(app.config['DATABASE'])
+
+def init_db():
+    with closing(connect_db()) as db:
+        with app.open_resource('nagdash.sql') as f:
+            db.cursor().executescript(f.read())
+        db.commit()
+
+def query_db(query, args=(), one=False):
+    cur = g.db.execute(query, args)
+    rv = [dict((cur.description[idx][0], value)
+               for idx, value in enumerate(row)) for row in cur.fetchall()]
+    return (rv[0] if rv else None) if one else rv
+
+@app.before_request
+def before_request():
+    g.db = connect_db()
+
+@app.teardown_request
+def teardown_request(exception):
+    if hasattr(g, 'db'):
+        g.db.close()
 
 @app.route("/")
 @require_login
@@ -86,6 +119,12 @@ def index():
 @app.route("/login", methods=['GET', 'POST'])
 def login(next = "/"):
     error = None
+    # Check if any users exist:
+    if not query_db('select count(*) from users', one=True):
+        error="No users exist, please create one now."
+        init_db()
+        if request.method == 'POST':
+            create_user(request.form['username'], request.form['password'])
     if request.method == 'POST':
         try:
             if check_credentials(request.form['username'], request.form['password']):
