@@ -52,12 +52,11 @@ table.viewtable thead tr .headerSortDown, table.viewtable thead tr .headerSortUp
 }
 /*divs*/
 #msgBox {
+    text-align: center;
 }
 #msgBox div {
-    display: block;
+    display: inline;
     padding: 5px;
     background-color:yellow;
     border-radius: 10px;
-    margin-left: auto;
-    margin-right: auto;
 }
