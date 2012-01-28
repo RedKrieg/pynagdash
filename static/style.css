@@ -52,7 +52,7 @@ background-color: #8dbdd8;
 }
 /*divs*/
 #msgBox {
-display: block;
+display: inline-block;
 background-color:yellow;
 text-align: center;
 border-radius: 10px;
