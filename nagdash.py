@@ -129,8 +129,8 @@ def index():
 @app.route("/login", methods=['GET', 'POST'])
 def login(next = None):
     error = None
-    if next is None:
-        next = url_for('index')
+    #if next is None:
+    #    next = url_for('index')
     # Check if any users exist:
     userresult = query_db('select count(*) from users', one=True)
     if userresult is None or userresult['count(*)'] == 0:
