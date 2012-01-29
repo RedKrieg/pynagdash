@@ -54,6 +54,18 @@ h1.tabletitle {
 #login fieldset {
     border-radius: 5;
     display: inline-block;
+    text-align: right;
+}
+#login fieldset label {
+    text-align: right;
+    margin-right: 1em;
+    width: 4em;
+    float: left;
+    display: block;
+}
+#login fieldset input {
+    text-align: right;
+    margin-left: 2em;
 }
 #login .error {
     color: red;
