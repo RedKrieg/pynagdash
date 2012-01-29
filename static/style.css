@@ -41,10 +41,10 @@ table.viewtable tbody tr.ok td {
 table.viewtable tbody tr.unknown td {
 	background-color:lightgrey;
 }
-table.viewtable thead tr .sorting {
+table.viewtable thead tr .sorting_desc {
 	background-image: url(white_overlay.png);
 }
-table.viewtable tr.even {
+table.viewtable .even {
     background-image: url(white_overlay.png);
 }
 h1.tabletitle {
