@@ -1,7 +1,7 @@
 {% if session['username'] is not none -%}
     <div id="toolbar">
-        <div class="navi"><a href="{{ url_for('index') }}">Home</a></div>
-        <div class="navi"><a href="{{ url_for('settings') }}">Settings</a></div>
         <div class="navi"><a href="{{ url_for('logout') }}">Logout</a></div>
+        <div class="navi"><a href="{{ url_for('settings') }}">Settings</a></div>
+        <div class="navi"><a href="{{ url_for('index') }}">Home</a></div>
     </div>
 {%- endif %}
