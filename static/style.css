@@ -1,6 +1,6 @@
 /* tables */
 table.viewtable {
-	font-family:arial;
+	font-family:Verdana, "Tahoma", "Helvetica", "arial", "sans";;
 	background-color: #CDCDCD;
 	margin:10px 0pt 15px;
 	font-size: 12pt;
@@ -47,6 +47,17 @@ table.viewtable .even {
 }
 h1.tabletitle {
     text-align: center;
+}
+#login {
+    text-align: center;
+}
+#login fieldset {
+    border-radius: 5;
+    display: inline-block;
+}
+#login .error {
+    color: red;
+    font-style: italic;
 }
 /*divs*/
 #msgBox {
