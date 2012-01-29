@@ -103,8 +103,27 @@ h1.tabletitle {
 #toolbar {
     text-align: right;
 }
-#toolbar .navi a {
-    color: white;
+.navi {
+    float: right;
     background-color: darkgrey;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
+}
+.navi a:link {
+    color: white;
     text-decoration:none;
+}
+.navi a:visited {
+    color: white;
+    text-decoration:none;
+}
+.navi a:hover {
+    color: white;
+    text-decoration:underline;
+}
+.navi a:active {
+    color: white;
+    text-decoration:underline;
 }
