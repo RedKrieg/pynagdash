@@ -129,9 +129,6 @@ def index():
 @app.route("/login", methods=['GET', 'POST'])
 def login(next = None):
     error = None
-    #if next is None:
-    #    next = url_for('index')
-    # Check if any users exist:
     userresult = query_db('select count(*) from users', one=True)
     if userresult is None or userresult['count(*)'] == 0:
         error="No users exist, please create one now."
@@ -142,6 +139,8 @@ def login(next = None):
         try:
             if check_credentials(request.form['username'], request.form['password']):
                 session['username'] = request.form['username']
+                if next is None:
+                    next = url_for('index')
                 return redirect(next)
             else:
                 error="Invalid user name and/or password."
