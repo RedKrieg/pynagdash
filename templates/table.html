@@ -1,0 +1,16 @@
+        <h1 class="tabletitle">{{ view["title"] }}"</h1>
+        <table cellspacing="1" class="viewtable">
+            <thead>
+                <tr>
+                    <th>Host</th>
+                    <th>Service</th>
+                    <th>Status</th>
+                    <th>Duration</th>
+                    <th>Attempt</th> 
+                    <th>Output</th>
+                </tr>
+            </thead>
+            <tbody data-source='{{ view["api_url"] }}'>
+            </tbody>
+        </table>
+

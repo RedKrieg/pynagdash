@@ -69,11 +69,8 @@ def require_login(func):
     """Decorates a function to require login"""
     @wraps(func)
     def decorated_func(*args, **kwargs):
-        try:
-            if session['username'] is not None:
-                return func(*args, **kwargs)
-        except:
-            pass
+        if 'username' in session:
+            return func(*args, **kwargs)
         return redirect(url_for('login', next=request.url))
     return decorated_func
 
