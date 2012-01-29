@@ -14,9 +14,7 @@ table.viewtable thead tr th, table.viewtable tfoot tr th {
 	padding: 4px;
 }
 table.viewtable thead tr .header {
-	background-image: url(bg.gif);
-	background-repeat: no-repeat;
-	background-position: center right;
+	background-image: #D0D0EE;
 	cursor: pointer;
 }
 table.viewtable tbody td {
