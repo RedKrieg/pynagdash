@@ -82,19 +82,8 @@
 {% endblock %}
 {% block content %}
         <div id="msgBox"><div></div></div>
-        <table cellspacing="1" class="viewtable">
-            <thead>
-                <tr>
-                    <th>Host</th>
-                    <th>Service</th>
-                    <th>Status</th>
-                    <th>Duration</th>
-                    <th>Attempt</th>
-                    <th>Output</th>
-                </tr>
-            </thead>
-            <tbody data-source='/api/json'>
-            </tbody>
-        </table>
+        {% for view in session['views'] %}
+            {% set data_source = view['api_url'] %}
+            {% include "table.html" %}
+        {% endfor %}
 {% endblock %}
-</html>

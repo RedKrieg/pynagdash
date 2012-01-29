@@ -106,6 +106,12 @@ def query_db(query, args=(), one=False):
                for idx, value in enumerate(row)) for row in cur.fetchall()]
     return (rv[0] if rv else None) if one else rv
 
+def init_views():
+    session['views'] = [ ]
+
+def add_view(filter, title):
+    session['views'].append({ 'api_url': url_for('api_filter', filter=filter), 'title': title })
+
 @app.before_request
 def before_request():
     g.db = connect_db()
@@ -121,7 +127,7 @@ def index():
     return show_view('index')
 
 @app.route("/login", methods=['GET', 'POST'])
-def login(next = "/"):
+def login(next = url_for('index')):
     error = None
     # Check if any users exist:
     userresult = query_db('select count(*) from users', one=True)
@@ -150,15 +156,11 @@ def logout():
 @require_login
 def show_view(view_name):
     if view_name == 'index':
+        if 'views' not in session:
+            init_views()
+            add_view('load', 'Load Status')
         return render_template('view_base.html', parse_row=parse_row)
     return 'not implemented'
-
-@app.route("/api/tbody")
-@app.route("/api/tbody/<level>")
-@require_login
-def api_tbody(level = 'critical'):
-    cache_level = parse_level(level)
-    return render_template('api_tbody.html', nag_status=cached_nag_status(level=cache_level), parse_row=parse_row)
 
 @app.route("/api/json")
 @app.route("/api/json/<level>")
