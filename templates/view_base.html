@@ -81,9 +81,8 @@
         </script>
 {% endblock %}
 {% block content %}
-        <div id="msgBox"><div></div></div>
+        <div id="msgBox"><div>Seems legit.</div></div>
         {% for view in session['views'] %}
-            {% set data_source = view['api_url'] %}
             {% include "table.html" %}
         {% endfor %}
 {% endblock %}
