@@ -6,7 +6,7 @@ from werkzeug.contrib.cache import SimpleCache
 from werkzeug.security import generate_password_hash, check_password_hash
 from contextlib import closing
 from functools import wraps
-import time, json, re, sqlite3
+import time, json, re, sqlite3, os
 app = Flask(__name__)
 app.config.from_pyfile('nagdash.cfg')
 cache = SimpleCache()
@@ -241,7 +241,7 @@ def filter_data(filter, nag_data = None, level = 'critical'):
         cache_level = parse_level(level)
         nag_data = cached_nag_status(level = cache_level)
     #FIXMEFIXMEFIXME
-    with open('filterset.json') as f:
+    with open(os.path.join(app.config['FILTERPATH'], 'load.json')) as f:
         rule_group = json.load(f)
     #rule_group = load_filter(filter)
     del_list = []
