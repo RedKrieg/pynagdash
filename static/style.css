@@ -42,10 +42,10 @@ table.viewtable tbody tr.unknown td {
 	background-color:lightgrey;
 }
 table.viewtable thead tr .sorting {
-	background-image: url(static/white_overlay.png);
+	background-image: url(white_overlay.png);
 }
 table.viewtable tr.even {
-    background-image: url(static/white_overlay.png);
+    background-image: url(white_overlay.png);
 }
 h1.tabletitle {
     text-align: center;
