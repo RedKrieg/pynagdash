@@ -65,7 +65,7 @@ h1.tabletitle {
 }
 #login fieldset input {
     text-align: right;
-    margin-left: 2em;
+    margin-left: 5em;
 }
 #login .error {
     color: red;
