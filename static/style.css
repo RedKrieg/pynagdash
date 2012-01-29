@@ -90,6 +90,11 @@ h1.tabletitle {
     border-radius: 10px;
     box-shadow: 1px 1px 2px rgba(0,0,0,0.4);
 }
+#content {
+    height: 100%;
+}
 #footer {
     text-align: right;
+    height: 1em;
+    margin-top: -1em;
 }
