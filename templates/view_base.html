@@ -8,7 +8,7 @@
 
         function set_color_classes(table) {
 
-            $(table).children("td").each(function (i) {
+            $(table).find("td").each(function (i) {
                 if ($(this).text() == "CRITICAL") {
                     $(this).parent().addClass("critical");
                 } else if($(this).text() == "OK") {
