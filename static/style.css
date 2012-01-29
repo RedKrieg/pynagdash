@@ -48,6 +48,7 @@ table.viewtable .even {
 h1.tabletitle {
     text-align: center;
 }
+/* login */
 #login {
     text-align: center;
 }
@@ -97,4 +98,13 @@ h1.tabletitle {
     text-align: right;
     height: 1em;
     margin-top: -1em;
+}
+/* nav bar */
+#toolbar {
+    text-align: right;
+}
+#toolbar .navi a {
+    color: white;
+    background-color: darkgrey;
+    text-decoration:none;
 }

@@ -157,8 +157,13 @@ def show_view(view_name):
         if 'views' not in session:
             init_views()
             add_view('load', 'Load Status')
-        return render_template('view_base.html', parse_row=parse_row)
+        return render_template('view_base.html')
     return 'not implemented'
+
+@app.route("/settings")
+@require_login
+def settings():
+    return render_template('base.html')
 
 @app.route("/api/json")
 @app.route("/api/json/<level>")
