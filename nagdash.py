@@ -170,7 +170,7 @@ def test_forms():
 
 def parse_filter(raw_columns):
     filter = []
-    while len(raw_columns['field'] > 0):
+    while len(raw_columns['field']) > 0:
         row = {}
         for column in ['field', 'operator', 'chain', 'value']:
             row[column] = raw_columns[column].pop()
