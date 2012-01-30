@@ -25,8 +25,8 @@ function chainCallback() {
     if (newval.indexOf("null") == -1) {
         $.get('{{ url_for('get_filter_row') }}', function(data) {
             myParentDiv.parent().append(data);
-            myParentDiv.parent().find(".chain").change(chainCallback);
-            myParentDiv.parent().find(".operator").change(operatorCallback);
+            myParentDiv.parent().find(".chain:last").change(chainCallback);
+            myParentDiv.parent().find(".operator:last").change(operatorCallback);
         });
     } else {
         var nextDiv = myParentDiv.next();
