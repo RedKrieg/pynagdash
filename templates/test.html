@@ -8,11 +8,11 @@ $(document).ready(function() {
         var newval = $(this).val();
         if (newval.indexOf("child") != -1) {
             $.get('{{ url_for('get_filter_row') }}', function(data) {
-                var myChild = $(this).parent().children('.childfieldset');
+                var myChild = $(this).parent();
                 alert(myChild.html());
                 alert(data);
-                myChild.html(data);
-                myChild.slideDown('medium');
+                //myChild.html(data);
+                //myChild.slideDown('medium');
             });
         } else {
             var myChild = $(this).parent().children('.childfieldset');
