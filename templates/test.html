@@ -9,7 +9,7 @@ $(document).ready(function() {
         if (newval.indexOf("child") != -1) {
             $.get('{{ url_for('get_filter_row') }}', function(data) {
                 var myChild = $(this).parent().children('.childfieldset');
-                alert(myChild);
+                alert(myChild.html());
                 alert(data);
                 myChild.html(data);
                 myChild.slideDown('medium');
