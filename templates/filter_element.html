@@ -1,14 +1,16 @@
-<select name="field" id="field" class="field">
-    {% for field in service_fields %}<option>{{ field }}</option>
-    {% endfor %}
-</select>
-<select name="operator" id="operator" class="operator">
-    {% for op in operators %}<option>{{ op }}</option>
-    {% endfor %}
-</select>
-<input type="text" name="value" id="value" class="value" />
-<select name="chain" id="chain" class="chain">
-    {% for rule in chain_rules %}<option>{{ rule }}</option>
-    {% endfor %}
-</select>
-<fieldset id="fieldset" class="childfieldset"></fieldset>
+<div class="filterelement">
+    <select name="field" id="field" class="field">
+        {% for field in service_fields %}<option>{{ field }}</option>
+        {% endfor %}
+    </select>
+    <select name="operator" id="operator" class="operator">
+        {% for op in operators %}<option>{{ op }}</option>
+        {% endfor %}
+    </select>
+    <input type="text" name="value" id="value" class="value" />
+    <select name="chain" id="chain" class="chain">
+        {% for rule in chain_rules %}<option>{{ rule }}</option>
+        {% endfor %}
+    </select>
+    <fieldset id="fieldset" class="childfieldset"></fieldset>
+</div>
