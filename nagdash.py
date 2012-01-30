@@ -172,9 +172,22 @@ def test_forms():
 @require_login
 def save_ruleset():
     #field, operator, value, chain
-    return str(request.form.items())
-    for element in request.form.items():
-        pass
+    data_set = { 'field': [], 'operator': [], 'value': [], 'chain': [] }
+    for i in range(len(request.form)/4):
+        data_set['field'].append(i)
+        data_set['operator'].append(i)
+        data_set['value'].append(i)
+        data_set['chain'].append(i)
+    #we've filled the arrays as large as they need to be
+    sorter = re.compile('(field|operator|value|chain)([0-9]+)')
+    for k, v in request.form.items():
+        column = sorter.match(k)
+        if column:
+            try:
+                data_set[column.group(1)][int(column.group(2))] = v
+            except:
+                pass
+    return str(data_set)
 
 @app.route("/view/<view_name>")
 @require_login
