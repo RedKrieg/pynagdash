@@ -3,38 +3,42 @@
 {{ super() }}
 <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.7.1.min.js') }}"></script>
 <script type="text/javascript" id="js">
+function operatorCallback() {
+    var newval = $(this).val();
+    var myChild = $(this).parent().children('.childfieldset');
+    if (newval.indexOf("child") != -1) {
+        $.get('{{ url_for('get_filter_row') }}', function(data) {
+            myChild.html(data);
+            myChild.slideDown('medium');
+            myChild.find(".operator").change(operatorCallback);
+            myChild.find(".chain").change(chainCallback);
+        });
+    } else {
+        myChild.slideUp('medium');
+        myChild.html('');
+    }
+}
+
+function chainCallback() {
+    var newval = $(this).val();
+    var myParentDiv = $(this).parent();
+    if (newval.indexOf("null") == -1) {
+        $.get('{{ url_for('get_filter_row') }}', function(data) {
+            myParentDiv.parent().append(data);
+            myParentDiv.parent().find(".chain").change(chainCallback);
+            myParentDiv.parent().find(".operator").change(operatorCallback);
+        });
+    } else {
+        var nextDiv = myParentDiv.next();
+        if (nextDiv.length != 0) {
+            nextDiv.remove();
+        }
+    }
+}
+
 $(document).ready(function() {
-    $(".operator").change(function() {
-        var newval = $(this).val();
-        var myChild = $(this).parent().children('.childfieldset');
-        var changeCallback = arguments.callee;
-        console.debug( 'hello' /* or message */ )
-        if (newval.indexOf("child") != -1) {
-            $.get('{{ url_for('get_filter_row') }}', function(data) {
-                myChild.html(data);
-                myChild.slideDown('medium');
-                myChild.find(".operator").change(changeCallback);
-            });
-        } else {
-            myChild.slideUp('medium');
-            myChild.html('');
-        }
-    });
-    $(".chain").change(function() {
-        var newval = $(this).val();
-        var myParentDiv = $(this).parent();
-        if (newval.indexOf("null") == -1) {
-            $.get('{{ url_for('get_filter_row') }}', function(data) {
-                myParentDiv.parent().append(data);
-                myParentDiv.parent().find(".chain").change(arguments.callee);
-            });
-        } else {
-            var nextDiv = myParentDiv.next();
-            if (nextDiv.length != 0) {
-                nextDiv.remove();
-            }
-        }
-    });
+    $(".operator").change(operatorCallback);
+    $(".chain").change(chainCallback);
 });
 </script>
 {% endblock %}
