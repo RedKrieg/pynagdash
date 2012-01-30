@@ -51,6 +51,16 @@ def cached_nag_status(status_file = app.config['STATUS_FILE'], level = STATE_CRI
         cache.set('nag-status-%s' % level, status, timeout=10)
     return status
 
+def cached_service_fields():
+    service_fields = cache.get('service-fields')
+    if service_fields is None:
+        host_data = cached_nag_status(level=STATE_OK)[0] # using OK here to ensure we get data, though it is slow
+        service_list = host_data.keys()
+        service_list = [item for item in service_list if item != 'HOST'] # must remove 'HOST'
+        service_fields = host_data[service_list[0]].keys()
+        cache.set('service-fields', service_fields, timeout=3600*24)
+    return service_fields
+
 def parse_level(level):
     """Converts text level to integer"""
     level = level.lower()
@@ -160,18 +170,10 @@ def logout():
     session['username'] = None
     return redirect(url_for('login'))
 
-@app.route("/test/forms")
-@require_login
-def test_forms():
-    service_fields=['time_critical', 'problem_id']
-    operators=['=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
-    chain_rules=['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
-    return render_template("test.html", service_fields=service_fields, operators=operators, chain_rules=chain_rules)
-
 @app.route("/api/filterrow")
 @require_login
 def get_filter_row():
-    service_fields=['time_critical', 'problem_id']
+    service_fields=cached_service_fields()
     operators=['=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
     chain_rules=['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
     return render_template("filter_element.html", service_fields=service_fields, operators=operators, chain_rules=chain_rules)
@@ -201,22 +203,6 @@ def save_ruleset():
             filtername = request.form['title'].lower()
     if filtername is None:
         abort(400)
-    # This code is for named elements followed by a number, trying a different method first
-    #data_set = { 'field': [], 'operator': [], 'value': [], 'chain': [] }
-    #for i in range(len(request.form)/4):
-    #    data_set['field'].append(i)
-    #    data_set['operator'].append(i)
-    #    data_set['value'].append(i)
-    #    data_set['chain'].append(i)
-    #we've filled the arrays as large as they need to be
-    #sorter = re.compile('(field|operator|value|chain)([0-9]+)')
-    #for k, v in request.form.items():
-    #    column = sorter.match(k)
-    #    if column:
-    #        try:
-    #            data_set[column.group(1)][int(column.group(2))] = v
-    #        except:
-    #            pass
     data_set = {}
     for column in ['field', 'operator', 'value', 'chain']:
         data_set[column] = request.form.getlist(column)
@@ -238,7 +224,10 @@ def show_view(view_name):
 @app.route("/settings")
 @require_login
 def settings():
-    return render_template('base.html')
+    service_fields = cached_service_fields()
+    operators=['=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
+    chain_rules=['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
+    return render_template('settings.html', service_fields=service_fields, operators=operators, chain_rules=chain_rules)
 
 @app.route("/api/json")
 @app.route("/api/json/<level>")
