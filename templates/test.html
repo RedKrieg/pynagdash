@@ -7,6 +7,7 @@ $(document).ready(function() {
     $(".operator").change(function() {
         var newval = $(this).val();
         var myChild = $(this).parent().children('.childfieldset');
+        console.debug( 'hello' /* or message */ )
         if (newval.indexOf("child") != -1) {
             $.get('{{ url_for('get_filter_row') }}', function(data) {
                 myChild.html(data);
