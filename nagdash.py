@@ -145,6 +145,16 @@ def login(next = None):
             error="Invalid data passed to login form."
     return render_template('login_form.html', error=error, next=next)
 
+@app.route("/test/makeuser")
+def test_makeuser():
+    return render_template('create_user.html')
+
+@app.route("/test/useradd", methods=['GET', 'POST'])
+def test_useradd():
+    if 'username' in request.form:
+        create_user(request.form['username'], request.form['password'])
+    return redirect(url_for('login'))
+
 @app.route("/logout")
 def logout():
     session['username'] = None
@@ -154,8 +164,8 @@ def logout():
 @require_login
 def test_forms():
     service_fields=['time_critical', 'problem_id']
-    operators=['=', '>', 'regex', 'regexchild']
-    chain_rules=['AND', 'OR', 'AND NOT', 'OR NOT']
+    operators=['=', '>', '>=', '<', '<=', 'regex', 'regexchild']
+    chain_rules=['None', 'AND', 'OR', 'AND NOT', 'OR NOT']
     return render_template("test.html", service_fields=service_fields, operators=operators, chain_rules=chain_rules)
 
 @app.route("/test/saveruleset", methods=['GET', 'POST'])
