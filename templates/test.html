@@ -6,17 +6,13 @@
 $(document).ready(function() {
     $(".operator").change(function() {
         var newval = $(this).val();
+        var myChild = $(this).parent().children('.childfieldset');
         if (newval.indexOf("child") != -1) {
             $.get('{{ url_for('get_filter_row') }}', function(data) {
-                var myChild = $(this).parent();
-                alert(myChild.html());
-                alert($(this).parent().html());
-                alert(data);
-                //myChild.html(data);
-                //myChild.slideDown('medium');
+                myChild.html(data);
+                myChild.slideDown('medium');
             });
         } else {
-            var myChild = $(this).parent().children('.childfieldset');
             myChild.slideUp('medium');
             myChild.html('');
         }
