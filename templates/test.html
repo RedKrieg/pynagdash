@@ -11,6 +11,7 @@ $(document).ready(function() {
             $.get('{{ url_for('get_filter_row') }}', function(data) {
                 myChild.html(data);
                 myChild.slideDown('medium');
+                myChild.find(".operator").change(arguments.callee);
             });
         } else {
             myChild.slideUp('medium');
@@ -23,6 +24,7 @@ $(document).ready(function() {
         if (newval.indexOf("null") == -1) {
             $.get('{{ url_for('get_filter_row') }}', function(data) {
                 myParentDiv.parent().append(data);
+                myParentDiv.parent().find(".chain").change(arguments.callee);
             });
         } else {
             var nextDiv = myParentDiv.next();
