@@ -16,7 +16,7 @@ STATE_WARNING = 1
 STATE_CRITICAL = 2
 STATE_UNKNOWN = 3
 
-test_filter_names = ["problem", "load"]
+test_filter_names = ["services", "load"]
 test_output_names = ["tbody", "json"]
 
 def try_float(num):
@@ -194,7 +194,7 @@ def parse_filter(raw_columns):
             return filter
     return filter
 
-@app.route("/test/saveruleset", methods=['GET', 'POST'])
+@app.route("/api/saveruleset", methods=['GET', 'POST'])
 @require_login
 def save_ruleset():
     valid_title = re.compile('[a-zA-Z0-9]+$')
@@ -211,7 +211,7 @@ def save_ruleset():
     parsed_data = parse_filter(data_set)
     with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filtername), 'w') as f:
         json.dump(parsed_data, f, indent=4)
-    return str(parsed_data)
+    return redirect(url_for('settings'))
 
 @app.route("/view/<view_name>")
 @require_login
@@ -219,6 +219,7 @@ def show_view(view_name):
     if view_name == 'index':
         if 'views' not in session:
             init_views()
+            add_view('services', 'Service Status')
             add_view('load', 'Load Status')
         return render_template('view_base.html')
     return 'not implemented'
