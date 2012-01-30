@@ -193,21 +193,25 @@ def save_ruleset():
             filtername = request.form['title'].lower()
     if filtername is None:
         abort(400)
-    data_set = { 'field': [], 'operator': [], 'value': [], 'chain': [] }
-    for i in range(len(request.form)/4):
-        data_set['field'].append(i)
-        data_set['operator'].append(i)
-        data_set['value'].append(i)
-        data_set['chain'].append(i)
+    # This code is for named elements followed by a number, trying a different method first
+    #data_set = { 'field': [], 'operator': [], 'value': [], 'chain': [] }
+    #for i in range(len(request.form)/4):
+    #    data_set['field'].append(i)
+    #    data_set['operator'].append(i)
+    #    data_set['value'].append(i)
+    #    data_set['chain'].append(i)
     #we've filled the arrays as large as they need to be
-    sorter = re.compile('(field|operator|value|chain)([0-9]+)')
-    for k, v in request.form.items():
-        column = sorter.match(k)
-        if column:
-            try:
-                data_set[column.group(1)][int(column.group(2))] = v
-            except:
-                pass
+    #sorter = re.compile('(field|operator|value|chain)([0-9]+)')
+    #for k, v in request.form.items():
+    #    column = sorter.match(k)
+    #    if column:
+    #        try:
+    #            data_set[column.group(1)][int(column.group(2))] = v
+    #        except:
+    #            pass
+    data_set = {}
+    for column in ['field', 'operator', 'value', 'chain']:
+        data_set[column] = request.form.getlist(column)
     parsed_data = parse_filter(data_set)
     with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filtername), 'w') as f:
         json.dump(parsed_data, f)
