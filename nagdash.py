@@ -214,7 +214,7 @@ def save_ruleset():
         data_set[column] = request.form.getlist(column)
     parsed_data = parse_filter(data_set)
     with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filtername), 'w') as f:
-        json.dump(parsed_data, f)
+        json.dump(parsed_data, f, indent=4)
     return str(parsed_data)
 
 @app.route("/view/<view_name>")
