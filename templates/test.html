@@ -30,8 +30,9 @@ function chainCallback() {
         });
     } else {
         var nextDiv = myParentDiv.next();
-        if (nextDiv.length != 0) {
+        while (nextDiv.length != 0) {
             nextDiv.remove();
+            nextDiv = myParentDiv.next();
         }
     }
 }
