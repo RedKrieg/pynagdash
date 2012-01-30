@@ -3,8 +3,9 @@
 <form id='filter' action = "{{ url_for('save_ruleset') }}" method='post'>
     <fieldset>
         <legend>Filter</legend>
-        {% set id = 1 %}
-        {% include "filter_element.html" %}
+        {% for id in range(10) %}
+            {% include "filter_element.html" %}
+        {% endfor %}
         {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
         <input type='submit' name='Submit' value='Submit' />
     </fieldset>
