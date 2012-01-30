@@ -10,6 +10,7 @@ $(document).ready(function() {
             $.get('{{ url_for('get_filter_row') }}', function(data) {
                 var myChild = $(this).parent();
                 alert(myChild.html());
+                alert($(this).parent().html());
                 alert(data);
                 //myChild.html(data);
                 //myChild.slideDown('medium');
