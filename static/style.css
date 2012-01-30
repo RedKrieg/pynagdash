@@ -127,3 +127,7 @@ h1.tabletitle {
     color: white;
     text-decoration:underline;
 }
+/* Rule entry form */
+.childfieldset {
+    display: none;
+}

@@ -150,6 +150,14 @@ def logout():
     session['username'] = None
     return redirect(url_for('login'))
 
+@app.route("/test/saveruleset")
+@require_login
+def save_ruleset():
+    #field, operator, value, chain
+    return str(request.form.items())
+    for element in request.form.items():
+        
+
 @app.route("/view/<view_name>")
 @require_login
 def show_view(view_name):
