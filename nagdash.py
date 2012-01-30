@@ -173,7 +173,7 @@ def parse_filter(raw_columns):
     while len(raw_columns['field']) > 0:
         row = {}
         for column in ['field', 'operator', 'chain', 'value']:
-            row[column] = raw_columns[column].pop()
+            row[column] = raw_columns[column].pop(0)
         row['child'] = None
         if 'child' in row['operator']:
             row['child'] = parse_filter(raw_columns)
