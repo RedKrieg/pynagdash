@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<form id='filter' action = "{{ url_for('test_forms') }}" method='post'>
+<form id='filter' action = "{{ url_for('save_ruleset') }}" method='post'>
     <fieldset>
         <legend>Filter</legend>
         {% set id = 1 %}
