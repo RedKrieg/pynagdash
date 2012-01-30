@@ -54,7 +54,7 @@ def cached_nag_status(status_file = app.config['STATUS_FILE'], level = STATE_CRI
 def cached_service_fields():
     service_fields = cache.get('service-fields')
     if service_fields is None:
-        host_data = cached_nag_status(level=STATE_OK)[0] # using OK here to ensure we get data, though it is slow
+        host_data = cached_nag_status(level=STATE_OK).itervalues().next() # using OK here to ensure we get data, though it is slow
         service_list = host_data.keys()
         service_list = [item for item in service_list if item != 'HOST'] # must remove 'HOST'
         service_fields = host_data[service_list[0]].keys()
