@@ -7,12 +7,13 @@ $(document).ready(function() {
     $(".operator").change(function() {
         var newval = $(this).val();
         var myChild = $(this).parent().children('.childfieldset');
+        var changeCallback = arguments.callee;
         console.debug( 'hello' /* or message */ )
         if (newval.indexOf("child") != -1) {
             $.get('{{ url_for('get_filter_row') }}', function(data) {
                 myChild.html(data);
                 myChild.slideDown('medium');
-                myChild.find(".operator").change(arguments.callee);
+                myChild.find(".operator").change(changeCallback);
             });
         } else {
             myChild.slideUp('medium');
