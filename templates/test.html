@@ -7,11 +7,15 @@ $(document).ready(function() {
     $(".operator").change(function() {
         var newval = $(this).val();
         if (newval.indexOf("child") != -1) {
-            alert($(this).parent().html());
-            //$(this).parent().children('.childfieldset').append($(this).parent().clone().end()); //need to append to '.filterelement .childfieldset'
-            //$(this).parent().children('.childfieldset').slideDown('medium');
+            $.get('{{ url_for('get_filter_row') }}', function(data) {
+                var myChild = $(this).parent().children('.childfieldset');
+                myChild.html(data);
+                myChild.slideDown('medium');
+            });
         } else {
-            $(this).parent(); //need to clear '.filterelement .childfieldset'
+            var myChild = $(this).parent().children('.childfieldset');
+            myChild.slideUp('medium');
+            myChild.html('');
         }
     });
 });

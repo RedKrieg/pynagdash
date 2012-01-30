@@ -168,6 +168,14 @@ def test_forms():
     chain_rules=['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
     return render_template("test.html", service_fields=service_fields, operators=operators, chain_rules=chain_rules)
 
+@app.route("/api/filterrow")
+@require_login
+def get_filter_row():
+    service_fields=['time_critical', 'problem_id']
+    operators=['=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
+    chain_rules=['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
+    return render_template("filter_element.html", service_fields=service_fields, operators=operators, chain_rules=chain_rules)
+
 def parse_filter(raw_columns):
     filter = []
     while len(raw_columns['field']) > 0:
