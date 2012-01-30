@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+<form id='filter' action = "{{ url_for('test_forms') }}" method='post'>
+    <fieldset>
+        <legend>Filter</legend>
+        {% set id = 1 %}
+        {% include "filter_element.html" %}
+        {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
+    </fieldset>
+</form>
