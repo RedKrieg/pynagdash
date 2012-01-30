@@ -156,7 +156,7 @@ def save_ruleset():
     #field, operator, value, chain
     return str(request.form.items())
     for element in request.form.items():
-        
+        pass
 
 @app.route("/view/<view_name>")
 @require_login
