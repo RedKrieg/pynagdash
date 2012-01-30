@@ -182,15 +182,15 @@ def parse_filter(raw_columns):
             return filter
     return filter
 
-@app.route("/test/saveruleset/<rule_name>", methods=['GET', 'POST'])
+@app.route("/test/saveruleset", methods=['GET', 'POST'])
 @require_login
-def save_ruleset(rule_name):
+def save_ruleset():
     valid_title = re.compile('[a-zA-Z0-9]+$')
     filtername = None
     #field, operator, value, chain
     if 'title' in request.form:
         if valid_title.match(request.form['title']):
-            filtername = request.form['title']
+            filtername = request.form['title'].lower()
     if filtername is None:
         abort(400)
     data_set = { 'field': [], 'operator': [], 'value': [], 'chain': [] }
