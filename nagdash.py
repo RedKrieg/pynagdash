@@ -208,9 +208,10 @@ def save_ruleset():
                 data_set[column.group(1)][int(column.group(2))] = v
             except:
                 pass
+    parsed_data = parse_filter(data_set)
     with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filtername), 'w') as f:
-        json.dump(f)
-    return str(parse_filter(data_set))
+        json.dump(parsed_data, f)
+    return str(parsed_data)
 
 @app.route("/view/<view_name>")
 @require_login
