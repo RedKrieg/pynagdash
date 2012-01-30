@@ -158,10 +158,12 @@ def login(next = None):
     return render_template('login_form.html', error=error, next=next)
 
 @app.route("/test/makeuser")
+@require_login
 def test_makeuser():
     return render_template('create_user.html')
 
 @app.route("/test/useradd", methods=['GET', 'POST'])
+@require_login
 def test_useradd():
     if 'username' in request.form:
         create_user(request.form['username'], request.form['password'])
@@ -217,6 +219,7 @@ def save_ruleset():
 @require_login
 def show_view(view_name):
     if view_name == 'index':
+        del session['views']
         if 'views' not in session:
             init_views()
             add_view('services', 'Service Status')
