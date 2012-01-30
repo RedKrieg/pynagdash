@@ -3,6 +3,7 @@
 <form id='filter' action = "{{ url_for('save_ruleset') }}" method='post'>
     <fieldset>
         <legend>Filter</legend>
+        <label for='title'>Title:</label><input type="text" maxlength="50" name="title" id="title" /><br />
         {% for id in range(10) %}
             {% include "filter_element.html" %}<br />
         {% endfor %}

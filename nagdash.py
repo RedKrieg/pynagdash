@@ -1,6 +1,6 @@
 #!/bin/env python2.7
 
-from flask import Flask, url_for, render_template, g, redirect, flash, request, session
+from flask import Flask, url_for, render_template, g, redirect, flash, request, session, abort
 from nagstatus import get_nag_status
 from werkzeug.contrib.cache import SimpleCache
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -164,7 +164,7 @@ def logout():
 @require_login
 def test_forms():
     service_fields=['time_critical', 'problem_id']
-    operators=['=', '>', '>=', '<', '<=', 'regex', 'regexchild']
+    operators=['=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
     chain_rules=['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
     return render_template("test.html", service_fields=service_fields, operators=operators, chain_rules=chain_rules)
 
@@ -182,10 +182,17 @@ def parse_filter(raw_columns):
             return filter
     return filter
 
-@app.route("/test/saveruleset", methods=['GET', 'POST'])
+@app.route("/test/saveruleset/<rule_name>", methods=['GET', 'POST'])
 @require_login
-def save_ruleset():
+def save_ruleset(rule_name):
+    valid_title = re.compile('[a-zA-Z0-9]+$')
+    filtername = None
     #field, operator, value, chain
+    if 'title' in request.form:
+        if valid_title.match(request.form['title']):
+            filtername = request.form['title']
+    if filtername is None:
+        abort(400)
     data_set = { 'field': [], 'operator': [], 'value': [], 'chain': [] }
     for i in range(len(request.form)/4):
         data_set['field'].append(i)
@@ -201,7 +208,8 @@ def save_ruleset():
                 data_set[column.group(1)][int(column.group(2))] = v
             except:
                 pass
-        
+    with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filtername)) as f:
+        json.dump(f)
     return str(parse_filter(data_set))
 
 @app.route("/view/<view_name>")
