@@ -150,7 +150,15 @@ def logout():
     session['username'] = None
     return redirect(url_for('login'))
 
-@app.route("/test/saveruleset")
+@app.route("/test/forms")
+@require_login
+def test_forms():
+    service_fields=['time_critical', 'problem_id']
+    operators=['=', '>', 'regex', 'regexchild']
+    chain_rules=['AND', 'OR', 'AND NOT', 'OR NOT']
+    return render_template("test.html", service_fields=service_fields, operators=operators, chain_rules=chain_rules)
+
+@app.route("/test/saveruleset", methods=['GET', 'POST'])
 @require_login
 def save_ruleset():
     #field, operator, value, chain
