@@ -57,7 +57,9 @@ def cached_service_fields():
         host_data = cached_nag_status(level=STATE_OK).itervalues().next() # using OK here to ensure we get data, though it is slow
         service_list = host_data.keys()
         service_list = [item for item in service_list if item != 'HOST'] # must remove 'HOST'
-        service_fields = host_data[service_list[0]].keys()
+        service_fields = sorted(host_data[service_list[0]].keys())
+        for i in range(10):
+            service_fields.append(str(i))
         cache.set('service-fields', service_fields, timeout=3600*24)
     return service_fields
 
