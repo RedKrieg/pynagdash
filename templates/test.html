@@ -7,8 +7,9 @@ $(document).ready(function() {
     $(".operator").change(function() {
         var newval = $(this).val();
         if (newval.indexOf("child") != -1) {
-            $(this).parent().children('.childfieldset').append($(this).parent().clone().end()); //need to append to '.filterelement .childfieldset'
-            $(this).parent().children('.childfieldset').slideDown('medium');
+            alert($(this).parent().html());
+            //$(this).parent().children('.childfieldset').append($(this).parent().clone().end()); //need to append to '.filterelement .childfieldset'
+            //$(this).parent().children('.childfieldset').slideDown('medium');
         } else {
             $(this).parent(); //need to clear '.filterelement .childfieldset'
         }
