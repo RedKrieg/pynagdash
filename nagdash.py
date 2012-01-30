@@ -316,7 +316,7 @@ def filter_data(filter, nag_data = None, level = 'critical'):
         cache_level = parse_level(level)
         nag_data = cached_nag_status(level = cache_level)
     #FIXMEFIXMEFIXME
-    with open(os.path.join(app.config['FILTERPATH'], 'load.json')) as f:
+    with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filter)) as f:
         rule_group = json.load(f)
     #rule_group = load_filter(filter)
     del_list = []
