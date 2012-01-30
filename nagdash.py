@@ -165,8 +165,22 @@ def logout():
 def test_forms():
     service_fields=['time_critical', 'problem_id']
     operators=['=', '>', '>=', '<', '<=', 'regex', 'regexchild']
-    chain_rules=['None', 'AND', 'OR', 'AND NOT', 'OR NOT']
+    chain_rules=['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
     return render_template("test.html", service_fields=service_fields, operators=operators, chain_rules=chain_rules)
+
+def parse_filter(raw_columns):
+    filter = []
+    while len(raw_columns['field'] > 0):
+        row = {}
+        for column in ['field', 'operator', 'chain', 'value']:
+            row[column] = raw_columns[column].pop()
+        row['child'] = None
+        if 'child' in row['operator']:
+            row['child'] = parse_filter(raw_columns)
+        filter.append(row)
+        if 'null' in row['chain']:
+            return filter
+    return filter
 
 @app.route("/test/saveruleset", methods=['GET', 'POST'])
 @require_login
@@ -187,7 +201,8 @@ def save_ruleset():
                 data_set[column.group(1)][int(column.group(2))] = v
             except:
                 pass
-    return str(data_set)
+        
+    return str(parse_filter(data_set))
 
 @app.route("/view/<view_name>")
 @require_login
