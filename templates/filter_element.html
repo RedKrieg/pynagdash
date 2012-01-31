@@ -1,16 +1,16 @@
 <div class="filterelement">
     <select name="field" id="field" class="field">
-        {% for field in service_fields %}<option>{{ field }}</option>
+        {% for field in service_fields %}<option{% if myfield is not none and field == myfield %} selected="selected"{% endif %}>{{ field }}</option>
         {% endfor %}
     </select>
     <select name="operator" id="operator" class="operator">
-        {% for op in operators %}<option>{{ op }}</option>
+        {% for op in operators %}<option{% if myop is not none and op == myop %} selected="selected"{% endif %}>{{ op }}</option>
         {% endfor %}
     </select>
-    <input type="text" name="value" id="value" class="value" />
+    <input type="text" name="value" id="value" class="value"{% if myvalue is not none %} value="{{ value }}"{% endif %} />
     <select name="chain" id="chain" class="chain">
-        {% for rule in chain_rules %}<option>{{ rule }}</option>
+        {% for rule in chain_rules %}<option{% if myrule is not none and rule == myrule %} selected="selected"{% endif %}>{{ rule }}</option>
         {% endfor %}
     </select>
-    <fieldset id="fieldset" class="childfieldset">Should not see this</fieldset>
+    <fieldset id="fieldset" class="childfieldset">{% if childdata is not none %}{{ childdata }}{% endif %}</fieldset>
 </div>

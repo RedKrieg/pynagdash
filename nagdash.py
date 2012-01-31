@@ -221,16 +221,55 @@ def list_filters(error=""):
     filter_list = filter_names()
     return render_template('list_filters.html', filter_list = filter_list, error = error)
 
+def filter_to_form(data, service_fields, operators, chain_rules):
+    mydata = ""
+    if data is None:
+        return mydata
+    for row in data:
+        try:
+            myfield = row['field']
+            myop = row['operator']
+            myvalue = row['value']
+            myrule = row['chain']
+        except:
+            continue
+        if 'child' in row and row['child'] is not None:
+            childdata=filter_to_form(row['child'])
+        else:
+            childdata=None
+        mydata += render_template('filter_element.html',
+                        service_fields=service_fields,
+                        operators=operators,
+                        chain_rules=chain_rules,
+                        myfield=myfield,
+                        myop=myop,
+                        myvalue=myvalue,
+                        myrule=myrule,
+                        childdata=childdata)
+    return mydata
+
 @app.route("/edit/filter", methods=['GET', 'POST'])
 @require_login
 def edit_filter():
+    service_fields = cached_service_fields()
+    operators=['=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
+    chain_rules=['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
     try:
         filtername = request.form['filter']
         with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filtername), 'r') as f:
             filter_data = json.load(f)
     except:
-        return render_template('edit_filter.html', title=None)
-    return render_template('edit_filter.html', title=filtername, data=filter_data)
+        return render_template('edit_filter.html',
+                    title=None,
+                    service_fields=service_fields,
+                    operators=operators,
+                    chain_rules=chain_rules)
+    return render_template('edit_filter.html',
+                title=filtername,
+                data=filter_to_form(filter_data, service_fields, operators, chain_rules),
+                service_fields=service_fields,
+                operators=operators,
+                chain_rules=chain_rules)
 
 @app.route("/api/savefilter", methods=['GET', 'POST'])
 @require_login
