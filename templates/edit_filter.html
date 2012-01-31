@@ -61,5 +61,5 @@ function chainCallback() {
 {{ super() }}
 {% endblock %}
 {% block views %}
-            {% set view = { 'api_url': url_for('api_filter', filtername='liveeditor'), 'title': "Live Editor" } %}{% include "table.html" %}
+            {% set view = { 'api_url': url_for('api_filter', filter='liveeditor'), 'title': "Live Editor" } %}{% include "table.html" %}
 {% endblock %}
