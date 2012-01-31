@@ -219,7 +219,6 @@ def save_ruleset():
 @require_login
 def show_view(view_name):
     if view_name == 'index':
-        del session['views']
         if 'views' not in session:
             init_views()
             add_view('services', 'Service Status')
