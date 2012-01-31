@@ -35,6 +35,16 @@ function chainCallback() {
     }
 }
 
+function updateLiveFilter() {
+    var filtername = $('#title').val();
+    $('#title').val('liveeditor');
+    var data = $("#filter").serialize();
+    $('#title').val(filtername);
+    $.post('{{ url_for(save_filter) }}', data);
+}
+
+setInterval('updateLiveFilter()',30000);
+
 {% endblock %}
 {% block js_document_ready %}
     {{ super() }}

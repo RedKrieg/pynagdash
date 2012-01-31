@@ -83,6 +83,7 @@ h1.tabletitle {
 /*divs*/
 #msgBox {
     text-align: center;
+    position: relative;
 }
 #msgBox div {
     display: inline;
@@ -90,6 +91,8 @@ h1.tabletitle {
     background-color:yellow;
     border-radius: 10px;
     box-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+    position: absolute;
+    left: 0;
 }
 #content {
     height: 100%;
