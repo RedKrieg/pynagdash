@@ -1,0 +1,61 @@
+{% extends "view_base.html" %}
+{% block head_js %}
+{{ super() }}
+function operatorCallback() {
+    var newval = $(this).val();
+    var myChild = $(this).parent().children('.childfieldset');
+    if (newval.indexOf("child") != -1) {
+        $.get('{{ url_for('get_filter_row') }}', function(data) {
+            myChild.html(data);
+            myChild.slideDown('medium');
+            myChild.find(".operator").change(operatorCallback);
+            myChild.find(".chain").change(chainCallback);
+        });
+    } else {
+        myChild.slideUp('medium');
+        myChild.html('');
+    }
+}
+
+function chainCallback() {
+    var newval = $(this).val();
+    var myParentDiv = $(this).parent();
+    if (newval.indexOf("null") == -1) {
+        $.get('{{ url_for('get_filter_row') }}', function(data) {
+            myParentDiv.parent().append(data);
+            myParentDiv.parent().find(".chain:last").change(chainCallback);
+            myParentDiv.parent().find(".operator:last").change(operatorCallback);
+        });
+    } else {
+        var nextDiv = myParentDiv.next();
+        while (nextDiv.length != 0) {
+            nextDiv.remove();
+            nextDiv = myParentDiv.next();
+        }
+    }
+}
+
+{% endblock %}
+{% block js_document_ready %}
+    {{ super() }}
+    $(".operator").change(operatorCallback);
+    $(".chain").change(chainCallback);
+{% endblock %}
+{% block title %}Filter Editor{% endblock %}
+{% block content %}
+<form id='filter' action = "{{ url_for('save_filter') }}" method='post'>
+    <fieldset>
+        <legend>Filter</legend>
+        <label for='title'>Title:</label><input type="text" maxlength="50" name="title" id="title" /><br />
+        <div id="filterlist">
+        {% include "filter_element.html" %}
+        </div>
+        {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
+        <input type='submit' name='submit' value='Submit' />
+    </fieldset>
+</form>
+{{ super() }}
+{% endblock %}
+{% block views %}
+            {% set view = 'test_filter' %}{% include "table.html" %}
+{% endblock %}

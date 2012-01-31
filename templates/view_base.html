@@ -5,7 +5,7 @@
     <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.7.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.dataTables.min.js') }}"></script>
     <script type="text/javascript" id="js">
-
+    {% block head_js %}
         function set_color_classes(table) {
 
             $(table).find("td").each(function (i) {
@@ -60,7 +60,7 @@
             }
 
             $(document).ready(function() {
-
+                {% block js_document_ready %}
                 $('#msgBox div').hide();
 
                 $('.viewtable').dataTable( {
@@ -73,16 +73,18 @@
                 } );
 
                 update_tables();
-
+                {% endblock %}
             });
 
             setInterval('update_tables()',10000);
-
+        {% endblock %}
         </script>
 {% endblock %}
 {% block content %}
         <div id="msgBox"><div>Seems legit.</div></div>
+        {% block views %}
         {% for view in session['views'] %}
             {% include "table.html" %}
         {% endfor %}
+        {% endblock %}
 {% endblock %}
