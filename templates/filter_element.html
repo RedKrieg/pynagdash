@@ -12,5 +12,5 @@
         {% for rule in chain_rules %}<option{% if myrule is not none and rule == myrule %} selected="selected"{% endif %}>{{ rule }}</option>
         {% endfor %}
     </select>
-    <fieldset id="fieldset" class="childfieldset">{% if childdata is not none %}{{ childdata }}{% endif %}</fieldset>
+    <fieldset id="fieldset" class="childfieldset">{% if childdata is not none %}{{ childdata|safe }}{% endif %}</fieldset>
 </div>
