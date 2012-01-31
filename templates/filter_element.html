@@ -7,7 +7,7 @@
         {% for op in operators %}<option{% if myop is not none and op == myop %} selected="selected"{% endif %}>{{ op }}</option>
         {% endfor %}
     </select>
-    <input type="text" name="value" id="value" class="value"{% if myvalue is not none %} value="{{ value }}"{% endif %} />
+    <input type="text" name="value" id="value" class="value"{% if myvalue is not none %} value="{{ myvalue }}"{% endif %} />
     <select name="chain" id="chain" class="chain">
         {% for rule in chain_rules %}<option{% if myrule is not none and rule == myrule %} selected="selected"{% endif %}>{{ rule }}</option>
         {% endfor %}
