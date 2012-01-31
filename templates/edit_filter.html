@@ -48,7 +48,7 @@ function chainCallback() {
         <legend>Filter</legend>
         <label for='title'>Title:</label><input type="text" maxlength="50" name="title" id="title" {% if title is not none %}value="{{ title }}"{% endif %} /><br />
         {% if title is not none %}
-        Here is where I'll have to build {{ data }} into an actual structure of filter elements.  This should be interesting.
+        {{ data|safe }}
         {% else %}
         <div id="filterlist">
         {% include "filter_element.html" %}
