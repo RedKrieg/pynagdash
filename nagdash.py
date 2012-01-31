@@ -289,13 +289,13 @@ def apply_filter(rule_group, service):
     retval = None
     chain_rule = None
     for rule in rule_group:
-        try:
+        try: # validates data structures
             operator = rule['operator']
             field = rule['field']
             chain = rule['chain']
             child = rule['child']
             value = rule['value']
-            service_data = service[field]
+            service_data = try_float(service[field])
         except:
             return False
         if operator == 'child':
