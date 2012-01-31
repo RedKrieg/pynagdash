@@ -241,7 +241,7 @@ def list_filters(error=""):
     return render_template('list_filters.html', filter_list = filter_list, error = error)
 
 @app.route("/edit/filter")
-require_login
+@require_login
 def edit_filter():
     try:
         filtername = request.form['filter']
