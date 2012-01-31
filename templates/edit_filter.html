@@ -40,7 +40,7 @@ function updateLiveFilter() {
     $('#title').val('liveeditor');
     var data = $("#filter").serialize();
     $('#title').val(filtername);
-    $.post('{{ url_for(save_filter) }}', data);
+    $.post('{{ url_for('save_filter') }}', data);
 }
 
 setInterval('updateLiveFilter()',30000);
