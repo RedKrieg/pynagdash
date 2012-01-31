@@ -105,14 +105,16 @@ h1.tabletitle {
 /* nav bar */
 #toolbar {
     text-align: right;
+    position: relative;
 }
 .navi {
-    float: right;
     background-color: darkgrey;
     padding-left: 1em;
     padding-right: 1em;
     padding-bottom: 0.5em;
     padding-top: 0.5em;
+    position: relative;
+    display: inline;
 }
 .navi a:link {
     color: white;
