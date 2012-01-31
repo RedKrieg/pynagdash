@@ -40,6 +40,8 @@ function chainCallback() {
     {{ super() }}
     $(".operator").change(operatorCallback);
     $(".chain").change(chainCallback);
+    $(".childfieldset").show();
+    $(".childfieldset:empty").hide();
 {% endblock %}
 {% block title %}Filter Editor{% endblock %}
 {% block content %}
