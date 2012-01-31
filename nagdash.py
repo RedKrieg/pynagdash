@@ -210,10 +210,7 @@ def show_view(view_name):
 @app.route("/settings")
 @require_login
 def settings():
-    service_fields = cached_service_fields()
-    operators=['=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
-    chain_rules=['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
-    return render_template('settings.html', service_fields=service_fields, operators=operators, chain_rules=chain_rules)
+    return render_template('settings.html')
 
 @app.route("/edit/filters")
 @require_login
