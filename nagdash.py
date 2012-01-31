@@ -234,7 +234,7 @@ def filter_to_form(data, service_fields, operators, chain_rules):
         except:
             continue
         if 'child' in row and row['child'] is not None:
-            childdata=filter_to_form(row['child'])
+            childdata=filter_to_form(row['child'], service_fields, operators, chain_rules)
         else:
             childdata=None
         mydata += render_template('filter_element.html',
