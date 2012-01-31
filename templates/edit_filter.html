@@ -46,10 +46,14 @@ function chainCallback() {
 <form id='filter' action = "{{ url_for('save_filter') }}" method='post'>
     <fieldset>
         <legend>Filter</legend>
-        <label for='title'>Title:</label><input type="text" maxlength="50" name="title" id="title" /><br />
+        <label for='title'>Title:</label><input type="text" maxlength="50" name="title" id="title" {% if title is not none %}value="{{ title }}"{% endif %} /><br />
+        {% if title is not none %}
+        Here is where I'll have to build {{ data }} into an actual structure of filter elements.  This should be interesting.
+        {% else %}
         <div id="filterlist">
         {% include "filter_element.html" %}
         </div>
+        {% endif %}
         {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
         <input type='submit' name='submit' value='Submit' />
     </fieldset>

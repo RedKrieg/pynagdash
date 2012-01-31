@@ -229,8 +229,8 @@ def edit_filter():
         with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filtername), 'r') as f:
             filter_data = json.load(f)
     except:
-        return list_filters(error="The specified template does not exist.")
-    return "Eventually this will create the form for the filter"
+        return render_template('edit_filter.html', title=None)
+    return render_template('edit_filter.html', title=filtername, data=filter_data)
 
 @app.route("/api/savefilter", methods=['GET', 'POST'])
 @require_login
