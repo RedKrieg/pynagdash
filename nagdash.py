@@ -16,9 +16,6 @@ STATE_WARNING = 1
 STATE_CRITICAL = 2
 STATE_UNKNOWN = 3
 
-test_filter_names = ["services", "load"]
-test_output_names = ["tbody", "json"]
-
 def try_float(num):
     try:
         return float(num)
@@ -121,6 +118,9 @@ def init_views():
 def add_view(filter, title):
     session['views'].append({ 'api_url': url_for('api_filter', filter=filter), 'title': title })
 
+def filter_names():
+    return [item[:-5] for item in os.listdir(app.config['FILTERPATH']) if item.endswith('.json')]
+
 @app.before_request
 def before_request():
     g.db = connect_db()
@@ -196,25 +196,6 @@ def parse_filter(raw_columns):
             return filter
     return filter
 
-@app.route("/api/saveruleset", methods=['GET', 'POST'])
-@require_login
-def save_ruleset():
-    valid_title = re.compile('[a-zA-Z0-9]+$')
-    filtername = None
-    #field, operator, value, chain
-    if 'title' in request.form:
-        if valid_title.match(request.form['title']):
-            filtername = request.form['title'].lower()
-    if filtername is None:
-        abort(400)
-    data_set = {}
-    for column in ['field', 'operator', 'value', 'chain']:
-        data_set[column] = request.form.getlist(column)
-    parsed_data = parse_filter(data_set)
-    with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filtername), 'w') as f:
-        json.dump(parsed_data, f, indent=4)
-    return redirect(url_for('settings'))
-
 @app.route("/view/<view_name>")
 @require_login
 def show_view(view_name):
@@ -237,10 +218,10 @@ def settings():
 @app.route("/edit/filters")
 @require_login
 def list_filters(error=""):
-    filter_list = [item[:-5] for item in os.listdir(app.config['FILTERPATH']) if item.endswith('.json')]
+    filter_list = filter_names()
     return render_template('list_filters.html', filter_list = filter_list, error = error)
 
-@app.route("/edit/filter")
+@app.route("/edit/filter", methods=['GET', 'POST'])
 @require_login
 def edit_filter():
     try:
@@ -250,6 +231,25 @@ def edit_filter():
     except:
         return list_filters(error="The specified template does not exist.")
     return "Eventually this will create the form for the filter"
+
+@app.route("/api/savefilter", methods=['GET', 'POST'])
+@require_login
+def save_filter():
+    valid_title = re.compile('[a-zA-Z0-9]+$')
+    filtername = None
+    #field, operator, value, chain
+    if 'title' in request.form:
+        if valid_title.match(request.form['title']):
+            filtername = request.form['title'].lower()
+    if filtername is None:
+        abort(400)
+    data_set = {}
+    for column in ['field', 'operator', 'value', 'chain']:
+        data_set[column] = request.form.getlist(column)
+    parsed_data = parse_filter(data_set)
+    with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filtername), 'w') as f:
+        json.dump(parsed_data, f, indent=4)
+    return redirect(url_for('list_filters', error="Saved filter %s" % filtername))
 
 @app.route("/api/json")
 @app.route("/api/json/<level>")
@@ -331,10 +331,8 @@ def filter_data(filter, nag_data = None, level = 'critical'):
     if not nag_data:
         cache_level = parse_level(level)
         nag_data = cached_nag_status(level = cache_level)
-    #FIXMEFIXMEFIXME
     with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filter)) as f:
         rule_group = json.load(f)
-    #rule_group = load_filter(filter)
     del_list = []
     for host in nag_data:
         for service in nag_data[host]:
@@ -352,7 +350,7 @@ def filter_data(filter, nag_data = None, level = 'critical'):
 def api_filter(filter, level = 'critical', format = 'json'):
     """filters data and formats/chooses level if requested"""
     filter = filter.lower()
-    if filter in test_filter_names: #FIXMEFIXMEFIXME
+    if filter in filter_names():
         nag_status = filter_data(filter, level = level)
         if format == 'json':
             return api_json(nag_status)
