@@ -234,6 +234,23 @@ def settings():
     chain_rules=['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
     return render_template('settings.html', service_fields=service_fields, operators=operators, chain_rules=chain_rules)
 
+@app.route("/edit/filters")
+@require_login
+def list_filters(error=""):
+    filter_list = [item[:-5] for item in os.listdir(app.config['FILTERPATH']) if item.endswith('.json')]
+    return render_template('list_filters.html', filter_list = filter_list, error = error)
+
+@app.route("/edit/filter")
+require_login
+def edit_filter():
+    try:
+        filtername = request.form['filter']
+        with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filtername), 'r') as f:
+            filter_data = json.load(f)
+    except:
+        return list_filters(error="The specified template does not exist.")
+    return "Eventually this will create the form for the filter"
+
 @app.route("/api/json")
 @app.route("/api/json/<level>")
 @require_login
