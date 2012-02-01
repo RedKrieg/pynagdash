@@ -345,7 +345,9 @@ def apply_filter(rule_group, service):
         elif operator == 'regexchild':
             match = re.search(value, service_data)
             if match:
-                newval = apply_filter(child, match.groups())
+                for i, v in enumerate(match.groups()):
+                    service[i] = v
+                newval = apply_filter(child, service)
             else:
                 newval = False
         elif operator == 'regex':
