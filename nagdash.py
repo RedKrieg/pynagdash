@@ -178,7 +178,7 @@ def logout():
 @require_login
 def get_filter_row():
     service_fields=cached_service_fields()
-    operators=['=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
+    operators=['=', '!=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
     chain_rules=['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
     return render_template("filter_element.html", service_fields=service_fields, operators=operators, chain_rules=chain_rules)
 
@@ -249,7 +249,7 @@ def filter_to_form(data, service_fields, operators, chain_rules):
 @require_login
 def edit_filter():
     service_fields = cached_service_fields()
-    operators=['=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
+    operators=['=', '!=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
     chain_rules=['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
     try:
         filtername = request.form['filter']
@@ -327,7 +327,7 @@ def apply_filter(rule_group, service):
     for rule in rule_group:
         try: # validates data structures
             operator = rule['operator']
-            field = rule['field']
+            field = try_float(rule['field']) #lets us use numeric indicies for regexchild requests
             chain = rule['chain']
             child = rule['child']
             value = rule['value']
