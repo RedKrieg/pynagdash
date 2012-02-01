@@ -22,6 +22,12 @@ def try_float(num):
     except:
         return num
 
+def try_int(num):
+    try:
+        return int(num)
+    except:
+        return num
+
 def parse_row(service_dict):
     """Parses out important service data to a tuple"""
     state_val = service_dict['current_state']
@@ -327,7 +333,7 @@ def apply_filter(rule_group, service):
     for rule in rule_group:
         try: # validates data structures
             operator = rule['operator']
-            field = try_float(rule['field']) #lets us use numeric indicies for regexchild requests
+            field = try_int(rule['field'])
             chain = rule['chain']
             child = rule['child']
             value = rule['value']
