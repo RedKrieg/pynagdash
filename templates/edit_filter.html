@@ -21,11 +21,14 @@ function chainCallback() {
     var newval = $(this).val();
     var myParentDiv = $(this).parent();
     if (newval.indexOf("null") == -1) {
-        $.get('{{ url_for('get_filter_row') }}', function(data) {
-            myParentDiv.parent().append(data);
-            myParentDiv.parent().find(".chain:last").change(chainCallback);
-            myParentDiv.parent().find(".operator:last").change(operatorCallback);
-        });
+        //This prevents us from adding extra rows when there is an unchained row already
+        if (myParentDiv.find(".chain:last").val() != "null") {
+            $.get('{{ url_for('get_filter_row') }}', function(data) {
+                myParentDiv.parent().append(data);
+                myParentDiv.parent().find(".chain:last").change(chainCallback);
+                myParentDiv.parent().find(".operator:last").change(operatorCallback);
+            });
+        }
     } else {
         var nextDiv = myParentDiv.next();
         while (nextDiv.length != 0) {
@@ -43,7 +46,7 @@ function updateLiveFilter() {
     $.post('{{ url_for('save_filter') }}', data);
 }
 
-setInterval('updateLiveFilter()',30000);
+setInterval('updateLiveFilter()',20000);
 
 {% endblock %}
 {% block js_document_ready %}
