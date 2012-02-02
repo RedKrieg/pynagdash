@@ -22,7 +22,7 @@ function chainCallback() {
     var myParentDiv = $(this).parent();
     if (newval.indexOf("null") == -1) {
         //This prevents us from adding extra rows when there is an unchained row already
-        if (myParentDiv.children(".chain:last").val() != "null") {
+        if (myParentDiv.parent().children(".chain:last").val() != "null") {
             $.get('{{ url_for('get_filter_row') }}', function(data) {
                 myParentDiv.parent().append(data);
                 myParentDiv.parent().find(".chain:last").change(chainCallback);
