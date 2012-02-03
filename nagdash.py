@@ -28,6 +28,23 @@ def try_int(num):
     except:
         return num
 
+def humantime(timedelta):
+    seconds = int(timedelta)
+    days = seconds % (3600 * 24)
+    seconds -= days * (3600 * 24)
+    hours = seconds % 3600
+    seconds -= hours * 3600
+    minutes = seconds % 60
+    seconds -= seconds * 60
+    if days > 0:
+        return "%dd,%dh,%dm,%ds" % (days, hours, minutes, seconds)
+    elif hours > 0:
+        return "%dh,%dm,%ds" % (hours, minutes, seconds)
+    elif minutes > 0:
+        return "%dm,%ds" % (minutes, seconds)
+    else:
+        return "%ds" % seconds
+
 def parse_row(service_dict):
     """Parses out important service data to a tuple"""
     state_val = service_dict['current_state']
@@ -44,7 +61,7 @@ def parse_row(service_dict):
         state_name = "UNKNOWN"
         state_column = 'last_time_unknown'
     duration = time.time() - service_dict[state_column]
-    return (service_dict['host_name'], service_dict['service_description'], state_name, str(duration), "%s/%s" % (service_dict['current_attempt'], service_dict['max_attempts']), service_dict['plugin_output'])
+    return (service_dict['host_name'], service_dict['service_description'], state_name, humantime(duration), str(duration), "%s/%s" % (service_dict['current_attempt'], service_dict['max_attempts']), service_dict['plugin_output'])
 
 def cached_nag_status(status_file = app.config['STATUS_FILE'], level = STATE_CRITICAL):
     """Tries to get current nag status from cache, regenerates and updates cache on failure."""
