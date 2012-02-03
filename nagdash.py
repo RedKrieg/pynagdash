@@ -30,12 +30,9 @@ def try_int(num):
 
 def humantime(timedelta):
     seconds = int(timedelta)
-    days = seconds % (3600 * 24)
-    seconds -= days * (3600 * 24)
-    hours = seconds % 3600
-    seconds -= hours * 3600
-    minutes = seconds % 60
-    seconds -= seconds * 60
+    days, seconds = divmod(seconds, (3600 * 24))
+    hours, seconds = divmod(seconds, 3600)
+    minutes, seconds = divmod(seconds, 60)
     if days > 0:
         return "%dd,%dh,%dm,%ds" % (days, hours, minutes, seconds)
     elif hours > 0:
