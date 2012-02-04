@@ -8,7 +8,7 @@ from contextlib import closing
 from functools import wraps
 import time, json, re, sqlite3, os
 app = Flask(__name__)
-app.config.from_pyfile('nagdash.cfg')
+app.config.from_pyfile('instance/nagdash.cfg')
 cache = SimpleCache()
 
 STATE_OK = 0
@@ -116,7 +116,7 @@ def create_user(username, password):
     g.db.commit()
 
 def connect_db():
-    return sqlite3.connect(app.config['DATABASE'])
+    return sqlite3.connect(app.open_instance_resource('nagdash.db'))
 
 def init_db():
     with closing(connect_db()) as db:
