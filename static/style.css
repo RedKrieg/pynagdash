@@ -42,6 +42,9 @@ table.viewtable tbody tr.unknown td {
 table.viewtable thead tr .sorting_desc {
 	background-image: url(white_overlay.png);
 }
+table.viewtable thead tr .sorting_asc {
+    background-image: url(white_overlay.png):
+}
 table.viewtable .even td {
     background-image: url(white_overlay.png);
 }
