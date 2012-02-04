@@ -1,31 +1,9 @@
 [
     {
         "operator": "=", 
-        "field": "is_flapping", 
-        "chain": "OR", 
-        "value": 1, 
+        "field": "service_description", 
+        "value": "Check Load", 
+        "chain": "null", 
         "child": null
-    }, 
-    {
-        "operator": "regexchild", 
-        "field": "plugin_output", 
-        "chain": null, 
-        "value": "load average: ([0-9\\.]+), ([0-9\\.]+), ([0-9\\.]+)", 
-        "child": [
-            {
-                "operator": ">=", 
-                "field": 0, 
-                "chain": "OR", 
-                "value": 2,
-                "child": null
-            }, 
-            {
-                "operator": ">=", 
-                "field": 2, 
-                "chain": null, 
-                "value": 5,
-                "child": null
-            }
-        ]
     }
 ]
