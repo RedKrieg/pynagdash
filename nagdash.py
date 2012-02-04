@@ -274,7 +274,7 @@ def edit_filter():
     chain_rules=['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
     try:
         filtername = request.form['filter']
-        with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filtername), 'r') as f:
+        with app.open_resource('filters/%s.json' % filtername) as f:#open(os.path.join(app.config['FILTERPATH'], '%s.json' % filtername), 'r') as f:
             filter_data = json.load(f)
     except:
         return render_template('edit_filter.html',
@@ -304,7 +304,7 @@ def save_filter():
     for column in ['field', 'operator', 'value', 'chain']:
         data_set[column] = request.form.getlist(column)
     parsed_data = parse_filter(data_set)
-    with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filtername), 'w') as f:
+    with with app.open_resource('filters/%s.json' % filtername, mode='w') as f:#open(os.path.join(app.config['FILTERPATH'], '%s.json' % filtername), 'w') as f:
         json.dump(parsed_data, f, indent=4)
     return redirect(url_for('list_filters', error="Saved filter %s" % filtername))
 
@@ -390,7 +390,7 @@ def filter_data(filter, nag_data = None, level = 'critical'):
     if not nag_data:
         cache_level = parse_level(level)
         nag_data = cached_nag_status(level = cache_level)
-    with open(os.path.join(app.config['FILTERPATH'], '%s.json' % filter)) as f:
+    with with app.open_resource('filters/%s.json' % filter) as f:#open(os.path.join(app.config['FILTERPATH'], '%s.json' % filter)) as f:
         rule_group = json.load(f)
     del_list = []
     for host in nag_data:
