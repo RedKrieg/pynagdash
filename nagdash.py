@@ -116,7 +116,7 @@ def create_user(username, password):
     g.db.commit()
 
 def connect_db():
-    return sqlite3.connect(app.open_instance_resource('nagdash.db'))
+    return sqlite3.connect(os.path.join(app.instance_path, 'nagdash.db'))
 
 def init_db():
     with closing(connect_db()) as db:
