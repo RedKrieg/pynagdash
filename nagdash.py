@@ -100,19 +100,48 @@ def require_login(func):
     @wraps(func)
     def decorated_func(*args, **kwargs):
         if 'username' in session:
-            return func(*args, **kwargs)
+            user = get_user(session['username'])
+            if user and not user['DISABLED'] == 1:
+                return func(*args, **kwargs)
         return redirect(url_for('login', next=request.url))
     return decorated_func
 
+def require_admin(func):
+    """Decorates a function to require admin privileges"""
+    @wraps(func)
+    def decorated_func(*args, **kwargs):
+        if 'username' in session:
+            user = get_user(session['username'])
+            if user and user['ADMIN'] == 1 and not user['DISABLED'] == 1:
+                return func(*args, **kwargs)
+        return redirect(url_for('login', next=request.url))
+    return decorated_func
+
+def get_user(username):
+    return query_db('select * from users where USER = ?', [username], one=True)
+
 def check_credentials(username, password):
-    user = query_db('select * from users where USER = ?', [username], one=True)
+    user = get_user(username)
     if user is None:
         return False
     else:
         return check_password_hash(user['PASSWORD'], password)
 
-def create_user(username, password):
-    query_db("insert into users VALUES (?,?)", [username, generate_password_hash(password)])
+def create_user(username, password, admin=0, disabled=0):
+    query_db("insert into users VALUES (?,?,?,?)", [username, generate_password_hash(password), admin, disabled])
+    g.db.commit()
+
+def update_user(username, password=None, admin=None, disabled=None):
+    user = get_user(username)
+    if user is None:
+        return False
+    if password is not None:
+        user['PASSWORD'] = generate_password_hash(password)
+    if admin is not None:
+        user['ADMIN'] = admin
+    if disabled is not None:
+        user['DISABLED'] = disabled
+    query_db("update users where USER = ? VALUES(?,?,?,?)", [ user['USER'], user['USER'], user['PASSWORD'], user['ADMIN'], user['DISABLED'] ])
     g.db.commit()
 
 def connect_db():
@@ -164,7 +193,7 @@ def login(next = None):
         error="No users exist, please create one now."
         init_db()
         if request.method == 'POST':
-            create_user(request.form['username'], request.form['password'])
+            create_user(request.form['username'], request.form['password'], admin=1, disabled=0)
     if request.method == 'POST':
         try:
             if check_credentials(request.form['username'], request.form['password']):
