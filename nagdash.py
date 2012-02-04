@@ -47,16 +47,17 @@ def parse_row(service_dict):
     state_val = service_dict['current_state']
     if state_val == STATE_OK:
         state_name = "OK"
-        state_column = 'last_time_ok'
+        #state_column = 'last_time_ok'
     elif state_val == STATE_WARNING:
         state_name = "WARNING"
-        state_column = 'last_time_warning'
+        #state_column = 'last_time_warning'
     elif state_val == STATE_CRITICAL:
         state_name = "CRITICAL"
-        state_column = 'last_time_critical'
+        #state_column = 'last_time_critical'
     else:
         state_name = "UNKNOWN"
-        state_column = 'last_time_unknown'
+        #state_column = 'last_time_unknown'
+    state_column = 'last_state_change'
     duration = time.time() - service_dict[state_column]
     return (service_dict['host_name'], service_dict['service_description'], state_name, str(duration), humantime(duration), "%s/%s" % (service_dict['current_attempt'], service_dict['max_attempts']), service_dict['plugin_output'])
 
