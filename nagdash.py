@@ -304,7 +304,7 @@ def save_filter():
     for column in ['field', 'operator', 'value', 'chain']:
         data_set[column] = request.form.getlist(column)
     parsed_data = parse_filter(data_set)
-    with with app.open_instance_resource('filters/%s.json' % filtername, mode='w') as f:
+    with app.open_instance_resource('filters/%s.json' % filtername, mode='w') as f:
         json.dump(parsed_data, f, indent=4)
     return redirect(url_for('list_filters', error="Saved filter %s" % filtername))
 
@@ -390,7 +390,7 @@ def filter_data(filter, nag_data = None, level = 'critical'):
     if not nag_data:
         cache_level = parse_level(level)
         nag_data = cached_nag_status(level = cache_level)
-    with with app.open_instance_resource('filters/%s.json' % filter) as f:
+    with app.open_instance_resource('filters/%s.json' % filter) as f:
         rule_group = json.load(f)
     del_list = []
     for host in nag_data:
