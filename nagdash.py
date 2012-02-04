@@ -208,12 +208,12 @@ def login(next = None):
     return render_template('login_form.html', error=error, next=next)
 
 @app.route("/test/makeuser")
-@require_login
+@require_admin
 def test_makeuser():
     return render_template('create_user.html')
 
 @app.route("/test/useradd", methods=['GET', 'POST'])
-@require_login
+@require_admin
 def test_useradd():
     if 'username' in request.form:
         create_user(request.form['username'], request.form['password'])
