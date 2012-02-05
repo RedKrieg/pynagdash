@@ -161,7 +161,7 @@ def get_description(viewname):
     view = get_view(viewname)
     if view is not None and 'DESCRIPTION' in view:
         return view['DESCRIPTION']
-    else
+    else:
         return viewname
 
 def create_view(viewname, description):
