@@ -130,6 +130,28 @@ a:hover {
 #footer {
     text-align: right;
 }
+#toggles {
+    position: absolute;
+    top: 0;
+}
+.toggle {
+    display: inline;
+    position: relative;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
+}
+.toggle a {
+    color: white;
+    text-decoration: none;
+}
+.toggle a:hover {
+    text-decoration: underline;
+}
+.toggle a:active {
+    text-decoration: underline;
+}
 /* nav bar */
 #toolbar {
     text-align: right;
@@ -144,11 +166,7 @@ a:hover {
     position: relative;
     display: inline;
 }
-.navi a:link {
-    color: white;
-    text-decoration:none;
-}
-.navi a:visited {
+.navi a {
     color: white;
     text-decoration:none;
 }
