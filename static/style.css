@@ -45,12 +45,12 @@ table.viewtable thead tr .sorting_desc {
     background-position: right;
 }
 table.viewtable thead tr .sorting_asc {
-    background-image: url(sort_asc.png):
+    background-image: url(sort_asc.png);
     background-repeat: no-repeat;
     background-position: right;
 }
 table.viewtable thead tr .sorting {
-    background-image: url(sort.png):
+    background-image: url(sort.png);
     background-repeat: no-repeat;
     background-position: right;
 }
