@@ -157,6 +157,13 @@ def list_users():
 def get_view(viewname):
     return query_db('select * from views where NAME = ?', [viewname], one=True)
 
+def get_description(viewname):
+    view = get_view(viewname)
+    if view is not None and 'DESCRIPTION' in view:
+        return view['DESCRIPTION']
+    else
+        return viewname
+
 def create_view(viewname, description):
     query_db("insert into views VALUES (?,?)", [viewname, description])
     g.db.commit()
@@ -266,10 +273,8 @@ def parse_filter(raw_columns):
 def show_view(view_name):
     if view_name == 'index':
         if 'views' not in session:
-            init_views()
-            add_view('services', 'Service Status')
-            add_view('load', 'Load Status')
-        return render_template('view_base.html')
+            return redirect(url_for('list_filters'))
+        return render_template('view_base.html', get_description = get_description)
     return 'not implemented'
 
 @app.route("/settings")
@@ -277,9 +282,11 @@ def show_view(view_name):
 def settings():
     return render_template('settings.html')
 
-@app.route("/edit/filters")
-@require_admin
+@app.route("/edit/filters", methods=['GET', 'POST'])
+@require_login
 def list_filters(error=""):
+    if 'submit' in request.form:
+        session['views'] = [ filter for filter in request.form if filter != 'submit' ]
     filter_list = [ filter for filter in filter_names() if not filter['NAME'].endswith('liveeditor') ]
     return render_template('list_filters.html', filter_list = filter_list, error = error)
 
@@ -352,20 +359,23 @@ def filter_to_form(data, service_fields, operators, chain_rules):
     return mydata
 
 @app.route("/edit/filter", methods=['GET', 'POST'])
+@app.route("/edit/filter/<filtername>")
 @require_admin
-def edit_filter():
+def edit_filter(filtername = None):
     service_fields = cached_service_fields()
     operators = ['=', '!=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
     chain_rules = ['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
     try:
-        filtername = request.form['filter']
+        if filtername is None:
+            filtername = request.form['filter']
         with app.open_instance_resource('filters/%s.json' % filtername) as f:
             filter_data = json.load(f)
     except:
         return render_template('edit_filter.html',
                     service_fields = service_fields,
                     operators = operators,
-                    chain_rules = chain_rules)
+                    chain_rules = chain_rules,
+                    get_description = get_description)
     try:
         description = get_view(filtername)['DESCRIPTION']
     except:

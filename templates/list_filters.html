@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Filter List{% endblock %}
 {% block content %}
-<form id='login' action = "{{ url_for('edit_filter') }}" method='post'>
+<form id = 'filterlist' action = "{{ url_for('list_filters') }}" method='post'>
     <fieldset>
         <legend>Filters</legend>
-        <select name='filter' id='filter'>
-            {% for filter in filter_list %}<option>{{ filter['NAME'] }}</option>
-            {% endfor %}
-        </select>
+        {% for filter in filter_list %}
+        <div class="filter">
+            <div class="filtername">
+                <input type="checkbox" {% if filter['NAME'] in session['views'] %}checked = "checked" {% endif %}name="{{ filter['NAME'] }}" value='<a href="{{ url_for('edit_filter', filtername = filter['NAME']) }}">{{ filter['NAME'] }}</a>' />:
+            </div>
+            <div class="filterdesc">
+                {{- filter['DESCRIPTION'] -}}
+            </div>
+        </div><br />
+        {% endfor %}
         <input type='submit' name='Submit' value='Submit' />
         {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
     </fieldset>
