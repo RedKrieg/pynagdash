@@ -51,6 +51,17 @@ table.viewtable .even td {
 h1.tabletitle {
     text-align: center;
 }
+.host_name {
+    color: #3D3D3D;
+    text-decoration: none;
+}
+.service_name {
+    color: #3D3D3D;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
 /* login */
 #login {
     text-align: center;
@@ -79,7 +90,8 @@ h1.tabletitle {
     padding-left: 0.5em;
     padding-right: 0.5em;
 }
-#login .error {
+/* errors */
+.error {
     color: red;
     font-style: italic;
 }
