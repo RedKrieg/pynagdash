@@ -291,7 +291,7 @@ def edit_user(username, error=""):
     user = get_user(username)
     admin = get_user(session['username'])['ADMIN'] == 1
     #ensure the logged in user has the right to edit this user
-    if 'submit' in request.form and (user['USER'] == username or admin):
+    if 'submit' in request.form and (admin or session['username'] == username):
         if request.form['password1'] == request.form['password2']:
             if not update_user(username, password=request.form['password1']):
                 #if we get False above, it's because the user doesn't exist, so we must be an admin
@@ -304,7 +304,7 @@ def edit_user(username, error=""):
     elif user is None:
         user = { 'USER': username, 'PASSWORD': '', 'ADMIN': 0, 'DISABLED': 0 }
         if error == "":
-            error = "Couldn't find user %s, you may create it now."
+            error = "Couldn't find user %s, you may create it now." % username
     
     return render_template('edit_user.html', user=user, error=error)
 
