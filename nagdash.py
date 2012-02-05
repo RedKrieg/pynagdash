@@ -141,7 +141,7 @@ def update_user(username, password=None, admin=None, disabled=None):
         user['ADMIN'] = admin
     if disabled is not None:
         user['DISABLED'] = disabled
-    query_db("update users where USER = ? VALUES(?,?,?,?)", [ user['USER'], user['USER'], user['PASSWORD'], user['ADMIN'], user['DISABLED'] ])
+    query_db("update users set (`PASSWORD` = ?, `ADMIN` = ?, `DISABLED` = ?) where USER = ?", [ user['PASSWORD'], user['ADMIN'], user['DISABLED'], user['USER'] ])
     g.db.commit()
     return True
 
