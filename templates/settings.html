@@ -1,8 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Settings for request['username']{% endblock %}
+{% block title %}Settings for session['username']{% endblock %}
 {% block content %}
 <ul>
 <li><a href="{{ url_for('list_filters') }}">Edit Filters</a></li>
 <li><a href="{{ url_for('edit_users') }}">Edit Users</a></li>
+<li><a href="{{ url_for('edit_user', username=session['username']) }}">My Account</a></li>
 </ul>
 {% endblock %}
