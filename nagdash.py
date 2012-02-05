@@ -275,9 +275,9 @@ def list_filters(error=""):
 @require_admin
 def edit_users(error=""):
     if 'submit' in request.form:
-        user_names = request.form.getlist(username)
-        user_admins = request.form.getlist(admin)
-        user_disableds = request.form.getlist(disabled)
+        user_names = request.form.getlist('username')
+        user_admins = request.form.getlist('admin')
+        user_disableds = request.form.getlist('disabled')
         user_list = [ {'USER': user, 'ADMIN': admin, 'DISABLED': disabled } for user, admin, disabled in zip(user_names, user_admins, user_disableds) ]
     else:
         user_list = list_users()
