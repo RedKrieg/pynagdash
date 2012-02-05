@@ -154,6 +154,21 @@ def update_user(username, password=None, admin=None, disabled=None):
 def list_users():
     return query_db('select * from users', [])
 
+def get_view(viewname):
+    return query_db('select * from views where NAME = ?', [viewname], one=True)
+
+def create_view(viewname, description):
+    query_db("insert into views VALUES (?,?)", [viewname, description])
+    g.db.commit()
+
+def update_view(viewname, description):
+    view = get_view(viewname)
+    if view is None:
+        return False
+    query_db("update views set `DESCRIPTION` = ? where `NAME` = ?", [description, viewname])
+    g.db.commit()
+    return True
+
 def connect_db():
     return sqlite3.connect(os.path.join(app.instance_path, 'nagdash.db'))
 
@@ -338,34 +353,45 @@ def filter_to_form(data, service_fields, operators, chain_rules):
 @require_admin
 def edit_filter():
     service_fields = cached_service_fields()
-    operators=['=', '!=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
-    chain_rules=['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
+    operators = ['=', '!=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
+    chain_rules = ['null', 'AND', 'OR', 'AND NOT', 'OR NOT']
     try:
         filtername = request.form['filter']
         with app.open_instance_resource('filters/%s.json' % filtername) as f:
             filter_data = json.load(f)
     except:
         return render_template('edit_filter.html',
-                    title=None,
-                    service_fields=service_fields,
-                    operators=operators,
-                    chain_rules=chain_rules)
-    return render_template('edit_filter.html',
-                title=filtername,
-                data=filter_to_form(filter_data, service_fields, operators, chain_rules),
-                service_fields=service_fields,
-                operators=operators,
-                chain_rules=chain_rules)
+                    service_fields = service_fields,
+                    operators = operators,
+                    chain_rules = chain_rules)
+    try:
+        description = get_view(filtername)['DESCRIPTION']
+    except:
+        description = ""
 
-@app.route("/api/savefilter", methods=['GET', 'POST'])
+    return render_template('edit_filter.html',
+                title = filtername,
+                description = description,
+                data=filter_to_form(filter_data, service_fields, operators, chain_rules),
+                service_fields = service_fields,
+                operators = operators,
+                chain_rules = chain_rules)
+
+@app.route("/api/savefilter", methods = ['POST'])
 @require_admin
 def save_filter():
     valid_title = re.compile('[a-zA-Z0-9]+$')
     filtername = None
     #field, operator, value, chain
-    if 'title' in request.form:
+    try:
         if valid_title.match(request.form['title']):
             filtername = request.form['title'].lower()
+        description = request.form['description']
+        if not update_view(filtername, description):
+            create_view(filtername, description)
+    except:
+        abort(400)
+            
     if filtername is None:
         abort(400)
     data_set = {}
