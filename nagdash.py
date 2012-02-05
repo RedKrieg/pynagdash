@@ -1,4 +1,4 @@
-#!/bin/env python2.7
+#!/usr/bin/env python
 
 from flask import Flask, url_for, render_template, g, redirect, flash, request, session, abort
 from nagstatus import get_nag_status
@@ -47,19 +47,23 @@ def parse_row(service_dict):
     state_val = service_dict['current_state']
     if state_val == STATE_OK:
         state_name = "OK"
-        #state_column = 'last_time_ok'
     elif state_val == STATE_WARNING:
         state_name = "WARNING"
-        #state_column = 'last_time_warning'
     elif state_val == STATE_CRITICAL:
         state_name = "CRITICAL"
-        #state_column = 'last_time_critical'
     else:
         state_name = "UNKNOWN"
-        #state_column = 'last_time_unknown'
     state_column = 'last_state_change'
     duration = time.time() - service_dict[state_column]
-    return (service_dict['host_name'], service_dict['service_description'], state_name, str(duration), humantime(duration), "%s/%s" % (service_dict['current_attempt'], service_dict['max_attempts']), service_dict['plugin_output'])
+    host_column = service_dict['host_name'] if 'NAG_URL' not in app.config else render_template('nag_link.html', host=service_dict['host_name'], linktype="host")
+    service_column = service_dict['service_description'] if 'NAG_URL' not in app.config else render_template('nag_link.html', host=service_dict['host_name'], service=service_dict['service_description'] linktype="service")
+    return (host_column,
+            service_column,
+            state_name,
+            str(duration),
+            humantime(duration),
+            "%s/%s" % (service_dict['current_attempt'], service_dict['max_attempts']),
+            service_dict['plugin_output'])
 
 def cached_nag_status(status_file = app.config['STATUS_FILE'], level = STATE_CRITICAL):
     """Tries to get current nag status from cache, regenerates and updates cache on failure."""
