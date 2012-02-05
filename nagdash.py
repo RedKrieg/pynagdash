@@ -278,7 +278,7 @@ def edit_users(error=""):
         user_names = request.form.getlist('username')
         user_admins = request.form.getlist('admin')
         user_disableds = request.form.getlist('disabled')
-        user_list = [ {'USER': user, 'ADMIN': admin, 'DISABLED': disabled } for user, admin, disabled in zip(user_names, user_admins, user_disableds) ]
+        user_list = [ {'USER': user, 'ADMIN': admin, 'DISABLED': disabled } for (user, admin, disabled) in zip(user_names, user_admins, user_disableds) ]
     else:
         user_list = list_users()
     return render_template('list_users.html', user_list = user_list, error = error)
