@@ -133,6 +133,7 @@ a:hover {
 #toggles {
     position: absolute;
     top: 0;
+    padding-top: 0.5em;
 }
 .toggle {
     background-color: darkgrey;
