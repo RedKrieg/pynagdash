@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Editing {{ user['USER'] }}{% endblock %}
+{% block content %}
+<form id='user' action = "{{ url_for('edit_user', username=user['USER']) }}" method='post'>
+    <fieldset>
+        <legend>Edit User</legend>
+        <label for='username' >Username:</label>
+        <input type='text' name='username' id='username' value="{{ user['USER'] }}" maxlength="50" /><br />
+        <label for='password1' >Password:</label>
+        <input type='password' name='password1' id='password1' maxlength="50" /><br />
+        <label for='password2' >Password (again):</label>
+        <input type='password' name='password2' id='password2' maxlength="50" /><br />
+        <input type='submit' name='submit' value='Submit' />
+        {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
+    </fieldset>
+</form>
+{% endblock %}

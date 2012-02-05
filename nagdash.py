@@ -158,10 +158,10 @@ def init_db():
         db.commit()
 
 def query_db(query, args=(), one=False):
-    #try:
-    cur = g.db.execute(query, args)
-    #except:
-    #    return None
+    try:
+        cur = g.db.execute(query, args)
+    except:
+        return None
     rv = [dict((cur.description[idx][0], value)
                for idx, value in enumerate(row)) for row in cur.fetchall()]
     return (rv[0] if rv else None) if one else rv
@@ -210,11 +210,6 @@ def login(next = None):
         except:
             error="Invalid data passed to login form."
     return render_template('login_form.html', error=error, next=next)
-
-@app.route("/edit/user/<username>")
-@require_admin
-def edit_user(username):
-    return render_template('create_user.html')
 
 @app.route("/test/useradd", methods=['GET', 'POST'])
 @require_admin
@@ -286,6 +281,32 @@ def edit_users(error=""):
     else:
         user_list = list_users()
     return render_template('list_users.html', user_list = user_list, error = error)
+
+@app.route("/edit/user/<username>", methods=['GET', 'POST'])
+@require_login
+def edit_user(username, error=""):
+    validate_username = re.compile('[a-zA-Z0-9]+$')
+    if not validate_username.match(username):
+        return redirect(url_for('edit_users'))
+    user = get_user(username)
+    admin = get_user(session['username'])['ADMIN'] == 1
+    #ensure the logged in user has the right to edit this user
+    if 'submit' in request.form and (user['USER'] == username or admin):
+        if request.form['password1'] == request.form['password2']:
+            if not update_user(username, password=request.form['password1']):
+                #if we get False above, it's because the user doesn't exist, so we must be an admin
+                create_user(username, request.form['password1'])
+                error = "User created"
+        else:
+            error = "Passwords must match"
+    if user is None and not admin:
+        return redirect(url_for('edit_users'))
+    elif user is None:
+        user = { 'USER': username, 'PASSWORD': '', 'ADMIN': 0, 'DISABLED': 0 }
+        if error == "":
+            error = "Couldn't find user %s, you may create it now."
+    
+    return render_template('edit_user.html', user=user, error=error)
 
 def filter_to_form(data, service_fields, operators, chain_rules):
     mydata = ""
