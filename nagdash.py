@@ -144,6 +144,9 @@ def update_user(username, password=None, admin=None, disabled=None):
     query_db("update users where USER = ? VALUES(?,?,?,?)", [ user['USER'], user['USER'], user['PASSWORD'], user['ADMIN'], user['DISABLED'] ])
     g.db.commit()
 
+def user_list():
+    return query_db('select * from users', [])
+
 def connect_db():
     return sqlite3.connect(os.path.join(app.instance_path, 'nagdash.db'))
 
@@ -263,10 +266,21 @@ def settings():
     return render_template('settings.html')
 
 @app.route("/edit/filters")
-@require_login
+@require_admin
 def list_filters(error=""):
     filter_list = filter_names()
     return render_template('list_filters.html', filter_list = filter_list, error = error)
+
+@app.route("/edit/users", methods=['GET', 'POST'])
+@require_admin
+def edit_users(error=""):
+    if 'submit' in request.form:
+        user_names = request.form.getlist(username)
+        user_admins = request.form.getlist(admin)
+        user_disableds = request.form.getlist(disabled)
+        user_list = [ {'USER': user, 'ADMIN': admin, 'DISABLED': disabled } for user, admin, disabled in zip(user_names, user_admins, user_disableds) ]
+    user_list = user_list()
+    return render_template('list_users.html', user_list = user_list, error = error)
 
 def filter_to_form(data, service_fields, operators, chain_rules):
     mydata = ""
@@ -296,7 +310,7 @@ def filter_to_form(data, service_fields, operators, chain_rules):
     return mydata
 
 @app.route("/edit/filter", methods=['GET', 'POST'])
-@require_login
+@require_admin
 def edit_filter():
     service_fields = cached_service_fields()
     operators=['=', '!=', '>', '>=', '<', '<=', 'regex', 'regexchild', 'child']
@@ -319,7 +333,7 @@ def edit_filter():
                 chain_rules=chain_rules)
 
 @app.route("/api/savefilter", methods=['GET', 'POST'])
-@require_login
+@require_admin
 def save_filter():
     valid_title = re.compile('[a-zA-Z0-9]+$')
     filtername = None
