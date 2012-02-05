@@ -179,7 +179,7 @@ def add_view(filter, title):
     session['views'].append({ 'api_url': url_for('api_filter', filter=filter), 'title': title })
 
 def filter_names():
-    return [item[:-5] for item in os.listdir(os.path.join(app.instance_path, 'filters')) if item.endswith('.json')]
+    return [item[:-5] for item in os.listdir(os.path.join(app.instance_path, 'filters')) if item.endswith('.json') and not item.endswith('liveeditor.json')]
 
 @app.before_request
 def before_request():
@@ -216,13 +216,6 @@ def login(next = None):
         except:
             error="Invalid data passed to login form."
     return render_template('login_form.html', error=error, next=next)
-
-@app.route("/test/useradd", methods=['GET', 'POST'])
-@require_admin
-def test_useradd():
-    if 'username' in request.form:
-        create_user(request.form['username'], request.form['password'])
-    return redirect(url_for('login'))
 
 @app.route("/logout")
 def logout():
