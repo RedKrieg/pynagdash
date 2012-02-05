@@ -9,16 +9,23 @@
         function set_color_classes(table) {
 
             $(table).find("td").each(function (i) {
+                var parenttr = $(this).parent();
                 if ($(this).text() == "CRITICAL") {
-                    $(this).parent().addClass("critical");
+                    parenttr.addClass("critical");
                 } else if($(this).text() == "OK") {
-                    $(this).parent().addClass("ok");
+                    parenttr.addClass("ok");
                 } else if($(this).text() == "WARNING") {
-                    $(this).parent().addClass("warning");
+                    if ($("#togglewarn").data('hidden') == 1) {
+                        parenttr.addClass("hidden");
+                    }
+                    parenttr.addClass("warning");
                 } else if($(this).text() == "UNKNOWN") {
-                    $(this).parent().addClass("unknown");
+                    parenttr.addClass("unknown");
                 } else if($(this).text() == "ACKNOWLEDGED") {
-                    $(this).parent().addClass("acknowledged");
+                    if ($("#toggleack").data('hidden') == 1) {
+                        parenttr.addClass("hidden");
+                    }
+                    parenttr.addClass("acknowledged");
                 }
             });
 
@@ -79,12 +86,27 @@
                 update_tables();
                 setInterval('update_tables()',10000);
 
+                $("#togglewarn").data('hidden', 1);
+                $("#toggleack").data('hidden', 1);
+
                 $("#togglewarn").click(function() {
-                    $(".warning").toggle();
+                    if ($(this).data('hidden') == 1) {
+                        $(this).data('hidden', 0);
+                        $(".warning").removeClass("hidden");
+                    } else {
+                        $(this).data('hidden', 0);
+                        $(".warning").addClass("hidden");
+                    }
                 });
 
                 $("#toggleack").click(function() {
-                    $(".acknowledged").toggle();
+                    if ($(this).data('hidden') == 1) {
+                        $(this).data('hidden', 0);
+                        $(".acknowledged").removeClass("hidden");
+                    } else {
+                        $(this).data('hidden', 0);
+                        $(".acknowledged").addClass("hidden");
+                    }
                 });
 
                 {% endblock %}

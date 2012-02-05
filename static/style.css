@@ -30,9 +30,6 @@ table.viewtable tbody tr.critical td {
 table.viewtable tbody tr.warning td {
 	background-color: yellow;
 }
-table.viewtable tbody tr.warning {
-    display: none;
-}
 table.viewtable tbody tr.ok td {
 	background-color: green;
 }
@@ -41,9 +38,6 @@ table.viewtable tbody tr.unknown td {
 }
 table.viewtable tbody tr.acknowledged td {
     background-color: lightgrey;
-}
-table.viewtable tbody tr.acknowledged {
-    display: none;
 }
 table.viewtable thead tr th {
     margin-right: 16px;
@@ -76,6 +70,9 @@ h1.tabletitle {
 .service_name {
     color: #3D3D3D;
     text-decoration: none;
+}
+.hidden {
+    display: none;
 }
 a:hover {
     text-decoration: underline;
