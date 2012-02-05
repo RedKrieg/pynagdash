@@ -280,7 +280,7 @@ def settings():
 @app.route("/edit/filters")
 @require_admin
 def list_filters(error=""):
-    filter_list = filter_names()
+    filter_list = [ filter for filter in filter_names() if not filter['NAME'].endswith('liveeditor') ]
     return render_template('list_filters.html', filter_list = filter_list, error = error)
 
 @app.route("/edit/users", methods=['GET', 'POST'])
