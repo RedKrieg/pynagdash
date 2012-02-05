@@ -144,7 +144,7 @@ def update_user(username, password=None, admin=None, disabled=None):
     query_db("update users where USER = ? VALUES(?,?,?,?)", [ user['USER'], user['USER'], user['PASSWORD'], user['ADMIN'], user['DISABLED'] ])
     g.db.commit()
 
-def user_list():
+def list_users():
     return query_db('select * from users', [])
 
 def connect_db():
@@ -279,7 +279,8 @@ def edit_users(error=""):
         user_admins = request.form.getlist(admin)
         user_disableds = request.form.getlist(disabled)
         user_list = [ {'USER': user, 'ADMIN': admin, 'DISABLED': disabled } for user, admin, disabled in zip(user_names, user_admins, user_disableds) ]
-    user_list = user_list()
+    else:
+        user_list = list_users()
     return render_template('list_users.html', user_list = user_list, error = error)
 
 def filter_to_form(data, service_fields, operators, chain_rules):
