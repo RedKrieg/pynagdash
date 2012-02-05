@@ -135,6 +135,7 @@ a:hover {
     top: 0;
 }
 .toggle {
+    background-color: darkgrey;
     display: inline;
     position: relative;
     padding-left: 1em;
