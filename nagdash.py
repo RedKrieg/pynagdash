@@ -56,7 +56,7 @@ def parse_row(service_dict):
     state_column = 'last_state_change'
     duration = time.time() - service_dict[state_column]
     host_column = service_dict['host_name'] if 'NAG_BASE_URL' not in app.config else render_template('nag_link.html', host=service_dict['host_name'], linktype="host")
-    service_column = service_dict['service_description'] if 'NAG_BASE_URL' not in app.config else render_template('nag_link.html', host=service_dict['host_name'], service=service_dict['service_description'] linktype="service")
+    service_column = service_dict['service_description'] if 'NAG_BASE_URL' not in app.config else render_template('nag_link.html', host=service_dict['host_name'], service=service_dict['service_description'], linktype="service")
     return (host_column,
             service_column,
             state_name,
