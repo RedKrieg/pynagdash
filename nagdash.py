@@ -513,20 +513,14 @@ def api_filter(filter, level = 'warning', format = 'json'):
                 nag_status = filter_data(filter, level = level)
                 cache.set('filtered-%s-%s' % (filter, level), nag_status, timeout=1)
             return api_json(nag_status)
-    return """syntax is:<br>
-@app.route("/api/filter/<filter>")<br>
-@app.route("/api/filter/<filter>/<level>")<br>
-@app.route("/api/filter/<filter>/<format>/<level>")"""
+        else:
+            return """Didn't match regex"""
+    else:
+        return """filter wasn't in names"""
+    return """dunno"""
 
 if __name__ == "__main__":
     if 'HOST' in app.config:
         app.run(host=app.config['HOST'])
     else:
         app.run()
-def cached_nag_status(status_file = app.config['STATUS_FILE'], level = STATE_CRITICAL):
-    """Tries to get current nag status from cache, regenerates and updates cache on failure."""
-    status = cache.get('nag-status-%s' % level)
-    if status is None:
-        status = get_nag_status(status_file, level)
-        cache.set('nag-status-%s' % level, status, timeout=10)
-    return status
