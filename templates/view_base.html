@@ -17,6 +17,8 @@
                     $(this).parent().addClass("warning");
                 } else if($(this).text() == "UNKNOWN") {
                     $(this).parent().addClass("unknown");
+                } else if($(this).text() == "ACKNOWLEDGED") {
+                    $(this.parent().addClass("acknowledged");
                 }
             });
 
@@ -75,15 +77,32 @@
                 } );
 
                 update_tables();
+                setInterval('update_tables()',10000);
+
+                $("#togglewarn").click(function() {
+                    $(".warning").toggle();
+                });
+
+                $("#toggleack").click(function() {
+                    $(".acknowledged").toggle();
+                });
+
                 {% endblock %}
             });
 
-            setInterval('update_tables()',10000);
         {% endblock %}
         </script>
 {% endblock %}
 {% block content %}
         <div id="msgBox"><div>Seems legit.</div></div>
+        <div id="toggles">
+            <div class="toggle">
+                <a id="togglewarn" href="#">Toggle warnings</a>
+            </div>
+            <div class="toggle">
+                <a id="toggleack" href="#">Toggle acknowlegements</a>
+            </div>
+        </div>
         {% block views %}
         {% for view in session['views'] %}
             {% include "table.html" %}

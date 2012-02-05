@@ -53,6 +53,8 @@ def parse_row(service_dict):
         state_name = "CRITICAL"
     else:
         state_name = "UNKNOWN"
+    if service_dict['problem_has_been_acknowledged'] == 1:
+        state_name = "ACKNOWLEDGED"
     state_column = 'last_state_change'
     duration = time.time() - service_dict[state_column]
     host_column = service_dict['host_name'] if 'NAG_BASE_URL' not in app.config else render_template('nag_link.html', host=service_dict['host_name'], linktype="host")
