@@ -466,4 +466,7 @@ def api_filter(filter, level = 'critical', format = 'json'):
 @app.route("/api/filter/<filter>/<format>/<level>")"""
 
 if __name__ == "__main__":
-    app.run()
+    if 'HOST' in app.config:
+        app.run(host=app.config['HOST'])
+    else:
+        app.run()

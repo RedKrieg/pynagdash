@@ -4,6 +4,7 @@
 <form id='users' action = "{{ url_for('edit_users') }}" method='post'>
     <fieldset>
         <legend>Users</legend>
+        {{ user_list }}
         {% for user in user_list %}
         <a href="{{ url_for('edit_user', username=user['USER']) }}">{{ user['USER'] }}</a><input type="hidden" name="username" value="{{ user['USER'] }}" />
         <input type="checkbox" name="admin" value="Admin" {% if user['ADMIN'] == 1 or user['ADMIN'] == True %}checked="checked" {% endif %} />
