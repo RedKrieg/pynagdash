@@ -152,7 +152,7 @@ def update_user(username, password=None, admin=None, disabled=None):
     return True
 
 def list_users():
-    return query_db('select * from users', [])
+    return query_db('select * from users')
 
 def get_view(viewname):
     return query_db('select * from views where NAME = ?', [viewname], one=True)
@@ -191,10 +191,12 @@ def init_views():
     session['views'] = [ ]
 
 def add_view(filter, title):
-    session['views'].append({ 'api_url': url_for('api_filter', filter=filter), 'title': title })
+    session['views'].append({ 'api_url': url_for('api_filter', filter=filter, level='warning'), 'title': title })
 
 def filter_names():
-    return [item[:-5] for item in os.listdir(os.path.join(app.instance_path, 'filters')) if item.endswith('.json') and not item.endswith('liveeditor.json')]
+    #leaving this here in case I want to offer admins the option to import new filters later
+    #return [item[:-5] for item in os.listdir(os.path.join(app.instance_path, 'filters')) if item.endswith('.json') and not item.endswith('liveeditor.json')]
+    return query_db('select * from views')
 
 @app.before_request
 def before_request():
@@ -500,17 +502,18 @@ def filter_data(filter, nag_data = None, level = 'critical'):
 @app.route("/api/filter/<filter>/<level>")
 @app.route("/api/filter/<filter>/<format>/<level>")
 @require_login
-def api_filter(filter, level = 'critical', format = 'json'):
+def api_filter(filter, level = 'warning', format = 'json'):
     """filters data and formats/chooses level if requested"""
     filter = filter.lower()
-    if filter in filter_names():
-        nag_status = filter_data(filter, level = level)
-        if format == 'json':
+    if filter in [ view['NAME'] for view in filter_names() ]:
+        if format == 'json' and re.match('[a-z]+$', level):
+            #Adding caching with 1 second timeout because requests tend to bunch together
+            nag_status = cache.get('filtered-%s-%s' % (filter, level))
+            if nag_status is None:
+                nag_status = filter_data(filter, level = level)
+                cache.set('filtered-%s-%s' % (filter, level), nag_status, timeout=1)
             return api_json(nag_status)
-        elif format == 'tbody':
-            return api_tbody(nag_status)
-        else:
-            return """syntax is:<br>
+    return """syntax is:<br>
 @app.route("/api/filter/<filter>")<br>
 @app.route("/api/filter/<filter>/<level>")<br>
 @app.route("/api/filter/<filter>/<format>/<level>")"""
@@ -520,3 +523,10 @@ if __name__ == "__main__":
         app.run(host=app.config['HOST'])
     else:
         app.run()
+def cached_nag_status(status_file = app.config['STATUS_FILE'], level = STATE_CRITICAL):
+    """Tries to get current nag status from cache, regenerates and updates cache on failure."""
+    status = cache.get('nag-status-%s' % level)
+    if status is None:
+        status = get_nag_status(status_file, level)
+        cache.set('nag-status-%s' % level, status, timeout=10)
+    return status

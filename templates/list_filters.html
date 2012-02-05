@@ -5,7 +5,7 @@
     <fieldset>
         <legend>Filters</legend>
         <select name='filter' id='filter'>
-            {% for filter in filter_list %}<option>{{ filter }}</option>
+            {% for filter in filter_list %}<option>{{ filter['NAME'] }}</option>
             {% endfor %}
         </select>
         <input type='submit' name='Submit' value='Submit' />
