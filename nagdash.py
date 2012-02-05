@@ -321,6 +321,8 @@ def edit_user(username, error=""):
                 #if we get False above, it's because the user doesn't exist, so we must be an admin
                 create_user(username, request.form['password1'])
                 error = "User created"
+            else:
+                error = "Password updated"
         else:
             error = "Passwords must match"
     if user is None and not admin:
