@@ -14,7 +14,7 @@
             </div>
         </div><br />
         {% endfor %}
-        <input type='submit' name='submit' value='Submit' />
+        <input type='submit' name='submit' value='Submit' /><a href="{{ url_for('edit_filter') }}">Create a new filter</a>
         {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
     </fieldset>
 </form>
