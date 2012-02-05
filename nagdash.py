@@ -516,7 +516,7 @@ def api_filter(filter, level = 'warning', format = 'json'):
         else:
             return """Didn't match regex"""
     else:
-        return """filter wasn't in names"""
+        return """filter wasn't in names.  %s""" % filter_names()
     return """dunno"""
 
 if __name__ == "__main__":
