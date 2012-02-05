@@ -1,5 +1,5 @@
 {%- if linktype == "service" -%}
     <a class="service_name" href="{{ config['NAG_BASE_URL'] }}cgi-bin/extinfo.cgi?type=2&host={{ host }}&service={{ service }}">{{ service }}</a>
 {%- elif linktype == "host" -%}
-    <a class="host_log" href="{{ config['NAG_BASE_URL'] }}cgi-bin/avail.cgi?host={{ host }}&show_log_entries"><img src="{{ url_for('static', filename='host_log.png' }}" /></a><a class="host_name" href="{{ config['NAG_BASE_URL'] }}cgi-bin/extinfo.cgi?type=1&host={{ host }}">{{ host }}</a>
+    <a class="host_log" href="{{ config['NAG_BASE_URL'] }}cgi-bin/avail.cgi?host={{ host }}&show_log_entries"><img src="{{ url_for('static', filename='host_log.png') }}" /></a><a class="host_name" href="{{ config['NAG_BASE_URL'] }}cgi-bin/extinfo.cgi?type=1&host={{ host }}">{{ host }}</a>
 {%- endif -%}
