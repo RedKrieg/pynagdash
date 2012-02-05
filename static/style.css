@@ -122,12 +122,10 @@ a:hover {
     left: 0;
 }
 #content {
-    height: 100%;
+    text-align: center;
 }
 #footer {
     text-align: right;
-    height: 1em;
-    margin-top: -1em;
 }
 /* nav bar */
 #toolbar {
