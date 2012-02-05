@@ -105,6 +105,9 @@ form fieldset legend {
     padding-left: 0.5em;
     padding-right: 0.5em;
 }
+.filter div {
+    display: inline;
+}
 /* errors */
 .error {
     color: red;
