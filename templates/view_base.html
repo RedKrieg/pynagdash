@@ -127,6 +127,7 @@
         </div>
         {% block views %}
         {% for view in session['views'] %}
+        {% set description = get_description(view) %}
             {% include "table.html" %}
         {% endfor %}
         {% endblock %}
