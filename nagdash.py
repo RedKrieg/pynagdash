@@ -287,6 +287,7 @@ def settings():
 def list_filters(error=""):
     if 'submit' in request.form:
         session['views'] = [ filter for filter in request.form if filter != 'submit' ]
+        error = request.form
     filter_list = [ filter for filter in filter_names() if not filter['NAME'].endswith('liveeditor') ]
     return render_template('list_filters.html', filter_list = filter_list, error = error)
 
