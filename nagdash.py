@@ -143,6 +143,7 @@ def update_user(username, password=None, admin=None, disabled=None):
         user['DISABLED'] = disabled
     query_db("update users where USER = ? VALUES(?,?,?,?)", [ user['USER'], user['USER'], user['PASSWORD'], user['ADMIN'], user['DISABLED'] ])
     g.db.commit()
+    return True
 
 def list_users():
     return query_db('select * from users', [])
@@ -278,8 +279,10 @@ def edit_users(error=""):
         user_names = request.form.getlist('username')
         user_admins = request.form.getlist('admin')
         user_disableds = request.form.getlist('disabled')
-        error = request.form
-        user_list = [ {'USER': user, 'ADMIN': admin, 'DISABLED': disabled } for (user, admin, disabled) in zip(user_names, user_admins, user_disableds) ]
+        #Use a list comprehension to make a list of dicts with the correct names for each column
+        user_list = [ {'USER': user, 'ADMIN': 1 if admin == "Yes" else 0, 'DISABLED': 1 if disabled == "Yes" else 0 } for (user, admin, disabled) in zip(user_names, user_admins, user_disableds) ]
+        for user in user_list:
+            update_user(user['USER'], admin=user['ADMIN'], disabled=user['DISABLED'])
     else:
         user_list = list_users()
     return render_template('list_users.html', user_list = user_list, error = error)
