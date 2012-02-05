@@ -375,6 +375,7 @@ def edit_filter(filtername = None):
             filter_data = json.load(f)
     except:
         return render_template('edit_filter.html',
+                    title = None,
                     service_fields = service_fields,
                     operators = operators,
                     chain_rules = chain_rules,
