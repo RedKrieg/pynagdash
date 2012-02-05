@@ -40,10 +40,19 @@ table.viewtable tbody tr.unknown td {
 	background-color:lightgrey;
 }
 table.viewtable thead tr .sorting_desc {
-	background-image: url(white_overlay.png);
+	background-image: url(sort_desc.png);
+    background-repeat: no-repeat;
+    background-position: right;
 }
 table.viewtable thead tr .sorting_asc {
-    background-image: url(white_overlay.png):
+    background-image: url(sort_asc.png):
+    background-repeat: no-repeat;
+    background-position: right;
+}
+table.viewtable thead tr .sorting {
+    background-image: url(sort.png):
+    background-repeat: no-repeat;
+    background-position: right;
 }
 table.viewtable .even td {
     background-image: url(white_overlay.png);
