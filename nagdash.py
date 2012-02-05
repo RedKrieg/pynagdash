@@ -210,9 +210,9 @@ def login(next = None):
             error="Invalid data passed to login form."
     return render_template('login_form.html', error=error, next=next)
 
-@app.route("/test/makeuser")
+@app.route("/edit/user/<username>")
 @require_admin
-def test_makeuser():
+def edit_user(username):
     return render_template('create_user.html')
 
 @app.route("/test/useradd", methods=['GET', 'POST'])
