@@ -39,6 +39,9 @@ table.viewtable tbody tr.ok td {
 table.viewtable tbody tr.unknown td {
 	background-color:lightgrey;
 }
+table.viewtable thead tr th {
+    margin-right: 16px;
+}
 table.viewtable thead tr .sorting_desc {
 	background-image: url(sort_desc.png);
     background-repeat: no-repeat;
