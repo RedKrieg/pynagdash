@@ -59,7 +59,7 @@ def parse_row(service_dict):
     duration = time.time() - service_dict[state_column]
     host_column = service_dict['host_name'] if 'NAG_BASE_URL' not in app.config else render_template('nag_link.html', host=service_dict['host_name'], linktype="host")
     service_column = service_dict['service_description'] if 'NAG_BASE_URL' not in app.config else render_template('nag_link.html', host=service_dict['host_name'], service=service_dict['service_description'], linktype="service")
-    flapping = "<img class='.flapping' src='%s' />" % url_for('static', filename='sort.png') if service_dict['is_flapping'] == 1 else ""
+    flapping = "<img class='flapping' src='%s' />" % url_for('static', filename='sort.png') if service_dict['is_flapping'] == 1 else ""
     return (host_column,
             service_column,
             state_name,
