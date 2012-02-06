@@ -68,6 +68,10 @@
 
             }
 
+            function animate_flap() {
+                $(".flapping img").fadeToggle('fast');
+            }
+
             $(document).ready(function() {
                 {% block js_document_ready %}
                 $('#msgBox div').hide();
@@ -85,6 +89,7 @@
 
                 update_tables();
                 setInterval('update_tables()',10000);
+                setInterval('animate_flap()',2000);
 
                 $("#togglewarn").data('hidden', 1);
                 $("#toggleack").data('hidden', 1);
