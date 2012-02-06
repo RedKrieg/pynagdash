@@ -28,10 +28,10 @@ table.viewtable tbody tr.critical td {
 	background-color: #F06868;
 }
 table.viewtable tbody tr.warning td {
-	background-color: yellow;
+	background-color: orange;
 }
 table.viewtable tbody tr.ok td {
-	background-color: green;
+	background-color: greenYellow;
 }
 table.viewtable tbody tr.unknown td {
 	background-color: lightgrey;
