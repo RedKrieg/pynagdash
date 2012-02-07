@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import time
 
 def get_property(line):
     line_split = line.strip().split('=')
@@ -56,6 +57,8 @@ def get_nag_status(file, threshold = 0):
                     if property == 'current_state' and host_statuses[this_host][this_service][property] < threshold:
                         #by simply removing the service here, subsequent attempts to add data fail to the next loop iteration
                         del host_statuses[this_host][this_service]
+                    elif property == 'last_state_change':
+                        host_statuses[this_host][this_service]['current_duration'] = time.time() - try_to_convert(value)
         except:
             pass
     f.close()
