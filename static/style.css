@@ -193,3 +193,13 @@ form fieldset legend {
 .childfieldset {
     display: none;
 }
+/* user listing */
+div.user {
+    display: inline;
+}
+div.admin {
+    display: inline;
+}
+div.disabled {
+    display: inline;
+}

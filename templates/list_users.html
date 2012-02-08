@@ -19,7 +19,7 @@
                 <option{% if user['DISABLED'] == 1 or user['DISABLED'] == "Yes" %} selected="selected"{% endif %}>Yes</option>
                 <option{% if user['DISABLED'] == 0 or user['DISABLED'] == "No" %} selected="selected"{% endif %}>No</option>
             </select>
-        </div>
+        </div><br />
         {% endfor %}
         <input type='submit' name='submit' value='Submit' />
         {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
