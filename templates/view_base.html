@@ -44,6 +44,7 @@
                 rTable.fnAddData(data);
                 set_color_classes(table);
                 $(table).find('td').filter('td:last-child').addClass('truncated');
+                resize_output_column();
 
                 return false;
 
@@ -74,6 +75,11 @@
                 $(".flapping").fadeToggle('fast');
             }
 
+            function resize_output_column() {
+                var targetWidth = $(window).width() / 2 - 50;
+                $('.viewtable').find('th').filter('th:last-child').width(targetWidth);
+            }
+
             $(document).ready(function() {
                 {% block js_document_ready %}
                 $('#msgBox div').hide();
@@ -84,10 +90,14 @@
                     "bInfo": false,
                     "bFilter": false,
                     "bAutoWidth": false,
-                    "aoColumns": [null, {"sWidth":"16%"}, null, {"bVisible":false}, {"iDataSort":3}, {"sWidth":"7%"}, {"sWidth":"50%"}],
+                    "aoColumns": [null, null, null, {"bVisible":false}, {"iDataSort":3}, null, null],
                     "aaSorting": [[ 2, "asc" ], [ 4, "desc" ]],
                     "oLanguage": { "sEmptyTable": "Everything's okay in this view!" }
                 } );
+
+                $(window).resize(function() {
+                    resize_output_column();
+                });
 
                 update_tables();
                 setInterval('update_tables()',10000);
