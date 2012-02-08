@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 {% block title %}Filter List{% endblock %}
+{% block head %}
+{{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename='jquery-1.7.1.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='jquery-ui-1.8.17.custom.min.js') }}"></script>
+<script type="text/javascript" id="js">
+$(function() {
+    $("#availableviews, #myviews").sortable({
+        connectWith: ".connectedSortable"
+    }).disableSelection();
+});
+</script>
+{% endblock %)
 {% block content %}
 <form id = 'filterlist' action = "{{ url_for('list_filters') }}" method='post'>
     <fieldset>
@@ -18,4 +30,32 @@
         {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
     </fieldset>
 </form>
+<ul id="availableviews" class="connectedSortable">
+    {% for filter in filter_list %}
+    {% if filter['NAME'] not in session['views'] %}
+    <li class="filter">
+        <div class="filtername">
+            <a href="{{ url_for('edit_filter', filtername = filter['NAME']) }}">{{ filter['NAME'] }}</a>
+        </div>
+        <div class="filterdesc">
+            {{- filter['DESCRIPTION'] -}}
+        </div>
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+<ul id="myviews" class="connectedSortable">
+    {% for filter in filter_list %}
+    {% if filter['NAME'] in session['views'] %}
+    <li class="filter">
+        <div class="filtername">
+            <a href="{{ url_for('edit_filter', filtername = filter['NAME']) }}">{{ filter['NAME'] }}</a>
+        </div>
+        <div class="filterdesc">
+            {{- filter['DESCRIPTION'] -}}
+        </div>
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
 {% endblock %}
