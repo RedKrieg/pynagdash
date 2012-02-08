@@ -43,6 +43,7 @@
                 rTable.fnClearTable();
                 rTable.fnAddData(data);
                 set_color_classes(table);
+                $(table).find('td').filter('td:last-child').addClass('truncated');
 
                 return false;
 
@@ -65,7 +66,6 @@
                     update_table(this);
                 });
 
-                $('.viewtable tr td').filter('td:last-child').addClass('truncated');
                 return false;
 
             }
