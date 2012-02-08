@@ -64,6 +64,8 @@
                 $('.viewtable').each(function() {
                     update_table(this);
                 });
+
+                $('.viewtable tr td').filter('td:last-child').addClass('truncated');
                 return false;
 
             }

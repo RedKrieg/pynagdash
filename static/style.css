@@ -25,6 +25,8 @@ table.viewtable tbody td {
 	background-color: #FFF;
 	vertical-align: top;
     font-weight: bold;
+}
+table.viewtable tbody td.truncated {
     overflow: hidden;
     text-overflow: ellipsis;
 }
