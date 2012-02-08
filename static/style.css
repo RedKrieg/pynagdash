@@ -6,7 +6,6 @@ table.viewtable {
 	font-size: 12pt;
 	width: 100%;
 	text-align: left;
-    white-space: nowrap;
     table-layout: fixed;
 }
 table.viewtable thead tr th, table.viewtable tfoot tr th {
@@ -29,6 +28,7 @@ table.viewtable tbody td {
 table.viewtable tbody td.truncated {
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 table.viewtable tbody tr.critical td {
 	background-color: #F06868;
