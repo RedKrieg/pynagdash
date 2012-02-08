@@ -195,11 +195,14 @@ form fieldset legend {
 }
 /* user listing */
 div.user {
-    display: inline;
+    display: inline-block;
+    width: 8em;
 }
 div.admin {
-    display: inline;
+    display: inline-block;
+    width: 8em;
 }
 div.disabled {
-    display: inline;
+    display: inline-block;
+    width: 8em;
 }
