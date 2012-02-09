@@ -12,7 +12,7 @@ $(function() {
 });
 
 $("#saveviews").click(function() {
-    $.post('{{ url_for('test_filter') }}', { 'views': $.makeArray($("#myviews li a")) }, function(data) { alert("Data: " + data); });
+    $.post('{{ url_for('test_filter') }}', { 'views': $.makeArray($("#myviews li a")) }, function(data) { alert("Data: " + data); }).success(function() { alert("success"); }).error(function() { alert("error"); });
 });
 </script>
 {% endblock %}
@@ -34,6 +34,7 @@ $("#saveviews").click(function() {
         {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
     </fieldset>
 </form>
+Incomplete, do not use:
 <ul id="availableviews" class="connectedSortable">
     {% for filter in filter_list %}
     {% if filter['NAME'] not in session['views'] %}
