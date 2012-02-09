@@ -281,7 +281,7 @@ def show_view(view_name):
 @app.route("/test/filter", methods=['GET', 'POST'])
 @require_login
 def test_filter():
-    return str(request.data)
+    return str(request.form)
 
 @app.route("/settings")
 @require_login
