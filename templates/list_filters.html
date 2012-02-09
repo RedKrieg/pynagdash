@@ -15,7 +15,7 @@ $(document).ready(function() {
     $("#saveviews").click(function() {
         var filterNames = [];
         $("#myviews li a").each(function(i) { filterNames.push($(this).text()); });
-        $.post('{{ url_for('test_filter') }}', { 'views': filterNames }, function(data) { alert("Data: " + data); }).success(function() { alert("success"); }).error(function() { alert("error"); });
+        $.post('{{ url_for('list_filters') }}', { 'views': filterNames }, function(data) { alert("Data: " + data); }).success(function() { alert("success"); }).error(function() { alert("error"); });
     });
 });
 </script>
