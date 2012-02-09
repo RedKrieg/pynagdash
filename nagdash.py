@@ -278,11 +278,6 @@ def show_view(view_name):
         return render_template('view_base.html', get_description = get_description)
     return 'not implemented'
 
-@app.route("/test/filter", methods=['GET', 'POST'])
-@require_login
-def test_filter():
-    return str(request.form)
-
 @app.route("/settings")
 @require_login
 def settings():
@@ -296,7 +291,7 @@ def list_filters(error=""):
         error = "Updated form listing."
     elif 'views' in request.form:
         session['views'] = request.form.getlist('views')
-        error = "Updated form listing."
+        return 'success'
     filter_list = [ filter for filter in filter_names() if not filter['NAME'].endswith('liveeditor') ]
     return render_template('list_filters.html', filter_list = filter_list, error = error)
 
