@@ -134,11 +134,11 @@ def check_credentials(username, password):
     else:
         return check_password_hash(user['PASSWORD'], password)
 
-def create_user(username, password, admin=0, disabled=0):
-    query_db("insert into users VALUES (?,?,?,?)", [username, generate_password_hash(password), admin, disabled])
+def create_user(username, password, admin=0, disabled=0, viewlist=""):
+    query_db("insert into users VALUES (?,?,?,?,?)", [username, generate_password_hash(password), admin, disabled, viewlist])
     g.db.commit()
 
-def update_user(username, password=None, admin=None, disabled=None):
+def update_user(username, password=None, admin=None, disabled=None, viewlist=None):
     user = get_user(username)
     if user is None:
         return False
@@ -148,7 +148,9 @@ def update_user(username, password=None, admin=None, disabled=None):
         user['ADMIN'] = admin
     if disabled is not None:
         user['DISABLED'] = disabled
-    query_db("update users set `PASSWORD` = ?, `ADMIN` = ?, `DISABLED` = ? where USER = ?", [ user['PASSWORD'], user['ADMIN'], user['DISABLED'], user['USER'] ])
+    if viewlist is not None:
+        user['VIEWLIST'] = viewlist
+    query_db("update users set `PASSWORD` = ?, `ADMIN` = ?, `DISABLED` = ?, `VIEWLIST` = ? where USER = ?", [ user['PASSWORD'], user['ADMIN'], user['DISABLED'], user['VIEWLIST'], user['USER'] ])
     g.db.commit()
     return True
 
@@ -177,6 +179,9 @@ def update_view(viewname, description):
     g.db.commit()
     return True
 
+def parse_viewlist(user):
+    return user['VIEWLIST'].split(',')
+
 def connect_db():
     return sqlite3.connect(os.path.join(app.instance_path, 'nagdash.db'))
 
@@ -196,10 +201,7 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 def init_views():
-    session['views'] = [ ]
-
-def add_view(filter, title):
-    session['views'].append({ 'api_url': url_for('api_filter', filter=filter, level='warning'), 'title': title })
+    session['views'] = [ {  } for view in parse_viewlist(get_user(session['username'])) ]
 
 def filter_names():
     #leaving this here in case I want to offer admins the option to import new filters later
@@ -290,7 +292,7 @@ def list_filters(error=""):
         session['views'] = [ filter for filter in request.form if filter != 'submit' ]
         error = "Updated form listing."
     elif 'views' in request.form:
-        session['views'] = request.form.getlist('views')
+        update_user(session['username'], viewlist=request.form.getlist('views'))
         return 'success'
     filter_list = [ filter for filter in filter_names() if not filter['NAME'].endswith('liveeditor') ]
     return render_template('list_filters.html', filter_list = filter_list, error = error)

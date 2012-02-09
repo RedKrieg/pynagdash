@@ -15,10 +15,9 @@ $(document).ready(function() {
     $("#saveviews").click(function() {
         var filterNames = [];
         $("#myviews li").each(function(i) {
-            filterNames.push({
-                'NAME': $(this).find('a').text(),
-                'DESCRIPTION': $(this).find('.filterdesc').text()
-            });
+            filterNames.push(
+                $(this).find('a').text()
+            );
         });
         $.post('{{ url_for('list_filters') }}', { 'views': filterNames }, function(data) {
             if ( data.indexOf("success") == -1 ) {
