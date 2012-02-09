@@ -5,16 +5,18 @@
 <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.7.1.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='jquery-ui-1.8.17.custom.min.js') }}"></script>
 <script type="text/javascript" id="js">
-$(function() {
-    $("#availableviews, #myviews").sortable({
-        connectWith: ".connectedSortable"
-    }).disableSelection();
-});
+$(document).ready(function() {
+    $(function() {
+        $("#availableviews, #myviews").sortable({
+            connectWith: ".connectedSortable"
+        }).disableSelection();
+    });
 
-$("#saveviews").click(function() {
-    var filterNames = [];
-    $("#myviews li a").each(function(i) { filterNames.push($(this).text()); });
-    $.post('{{ url_for('test_filter') }}', { 'views': filterNames }, function(data) { alert("Data: " + data); }).success(function() { alert("success"); }).error(function() { alert("error"); });
+    $("#saveviews").click(function() {
+        var filterNames = [];
+        $("#myviews li a").each(function(i) { filterNames.push($(this).text()); });
+        $.post('{{ url_for('test_filter') }}', { 'views': filterNames }, function(data) { alert("Data: " + data); }).success(function() { alert("success"); }).error(function() { alert("error"); });
+    });
 });
 </script>
 {% endblock %}
