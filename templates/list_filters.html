@@ -46,6 +46,7 @@ $(document).ready(function() {
 </script>
 {% endblock %}
 {% block content %}
+<div id="msgBox"><div></div></div>
 <form id = 'filterlist' action = "{{ url_for('list_filters') }}" method='post'>
     <fieldset>
         <legend>Filters</legend>
@@ -65,6 +66,7 @@ $(document).ready(function() {
 </form>
 Incomplete, do not use:
 <div class="viewselect">
+    Available views:<br />
     <ul id="availableviews" class="connectedSortable">
         {% for filter in filter_list %}
         {% if filter['NAME'] not in session['views'] %}
@@ -81,6 +83,7 @@ Incomplete, do not use:
     </ul>
 </div>
 <div class="viewselect">
+    Your views:<br />
     <ul id="myviews" class="connectedSortable">
         {% for filter in filter_list %}
         {% if filter['NAME'] in session['views'] %}
