@@ -278,6 +278,11 @@ def show_view(view_name):
         return render_template('view_base.html', get_description = get_description)
     return 'not implemented'
 
+@app.route("/test/filter", methods=['GET', 'POST'])
+@require_login
+def test_filter():
+    return request.form
+
 @app.route("/settings")
 @require_login
 def settings():

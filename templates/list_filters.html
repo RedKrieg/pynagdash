@@ -10,6 +10,10 @@ $(function() {
         connectWith: ".connectedSortable"
     }).disableSelection();
 });
+
+$("#saveviews").click(function() {
+    $.post('{{ url_for('test_filter') }}', { 'views': $.makeArray($("#myviews li a")) }, function(data) { alert("Data: " + data); });
+});
 </script>
 {% endblock %}
 {% block content %}
@@ -58,4 +62,5 @@ $(function() {
     {% endif %}
     {% endfor %}
 </ul>
+<a href="#" id="saveviews">Save views</a>
 {% endblock %}
