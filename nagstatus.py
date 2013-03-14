@@ -15,9 +15,9 @@ def try_to_convert(value):
     except:
         return value
 
-def get_nag_status(file, threshold = 0):
-    """Reads status.dat referred to by [file] and returns a dictionary version of it"""
-    status_file = file
+def get_nag_status(filename, threshold = 0):
+    """Reads status.dat referred to by [filename] and returns a dictionary version of it"""
+    status_file = filename
 
     f = open(status_file, 'r')
 
@@ -34,30 +34,30 @@ def get_nag_status(file, threshold = 0):
             group_type = line.strip().split()[0]
             continue
         try:
-            property, value = get_property(line) #fails on lines without =, the try makes us pass
+            this_property, value = get_property(line) #fails on lines without =, the try makes us pass
             #not yet reading programstatus or info
             if group_type == 'hoststatus':
-                if property == 'host_name':
+                if this_property == 'host_name':
                     this_host = value
                     host_statuses[this_host] = {}
                     host_statuses[this_host]['HOST'] = {}
                 else:
-                    host_statuses[this_host]['HOST'][property] = try_to_convert(value)
+                    host_statuses[this_host]['HOST'][this_property] = try_to_convert(value)
             elif group_type == 'servicestatus':
                 #host_name always comes before service_description
-                if property == 'host_name':
+                if this_property == 'host_name':
                     this_host = value
-                elif property == 'service_description':
+                elif this_property == 'service_description':
                     this_service = value
                     host_statuses[this_host][this_service] = {}
-                    host_statuses[this_host][this_service][property] = value #handy place to have the service description and host name
+                    host_statuses[this_host][this_service][this_property] = value #handy place to have the service description and host name
                     host_statuses[this_host][this_service]['host_name'] = this_host
                 else:
-                    host_statuses[this_host][this_service][property] = try_to_convert(value)
-                    if property == 'current_state' and host_statuses[this_host][this_service][property] < threshold:
+                    host_statuses[this_host][this_service][this_property] = try_to_convert(value)
+                    if this_property == 'current_state' and host_statuses[this_host][this_service][this_property] < threshold:
                         #by simply removing the service here, subsequent attempts to add data fail to the next loop iteration
                         del host_statuses[this_host][this_service]
-                    elif property == 'last_state_change':
+                    elif this_property == 'last_state_change':
                         host_statuses[this_host][this_service]['current_duration'] = time.time() - try_to_convert(value)
         except:
             pass
