@@ -6,7 +6,8 @@ def get_property(line):
     #returns the property name and remaining data recombined after the split above
     if len(line_split) < 2:
         raise Exception("Line is not a key/value pair.")
-    return line_split[0], '='.join(line_split[1:])
+    #Ensures that all characters are valid unicode strings
+    return line_split[0].encode('utf-8', 'ignore'), u'='.join(line_split[1:])
 
 def try_to_convert(value):
     """Tries to convert [value] to an int, returns the original string on fail"""
@@ -66,4 +67,6 @@ def get_nag_status(filename, threshold = 0):
 
 if __name__ == "__main__":
     #simply me testing, this chunk is not needed
-    print get_nag_status('status.dat', 1)
+    status = get_nag_status('status.dat', 0)
+    import json
+    print json.dumps(status, indent=4)
