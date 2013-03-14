@@ -29,11 +29,16 @@ def try_int(num):
         return num
 
 def humantime(timedelta):
+    """Converts time durations to human readable time"""
     seconds = int(timedelta)
+    years, seconds = divmod(seconds, (3600 * 24 * 365))
     days, seconds = divmod(seconds, (3600 * 24))
     hours, seconds = divmod(seconds, 3600)
     minutes, seconds = divmod(seconds, 60)
-    if days > 0:
+    if years > 0:
+        return "%dy, %dd, %dh, %dm, %ds" % (years, days, hours, minutes,
+                                            seconds)
+    elif days > 0:
         return "%dd, %dh, %dm, %ds" % (days, hours, minutes, seconds)
     elif hours > 0:
         return "%dh, %dm, %ds" % (hours, minutes, seconds)
