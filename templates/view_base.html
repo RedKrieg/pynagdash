@@ -133,6 +133,11 @@
             </div>
         </div>
         {% block views %}
+        {% set api_func = 'api_host' %}
+        {% set view = 'host' %}
+        {% set description = 'Hosts Down' %}
+        {% include "table.html" %}
+        {% set api_func = 'api_filter' %}
         {% for view in session['views'] %}
         {% set description = get_description(view) %}
             {% include "table.html" %}

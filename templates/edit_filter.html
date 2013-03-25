@@ -77,5 +77,5 @@ setInterval('updateLiveFilter()',20000);
 {{ super() }}
 {% endblock %}
 {% block views %}
-            {% set view = '%sliveeditor' % session['username'] %}{% include "table.html" %}
+    {% set view = '%sliveeditor' % session['username'] %}{% set api_func='api_filter' %}{% include "table.html" %}
 {% endblock %}
