@@ -43,7 +43,11 @@
                 rTable.fnClearTable();
                 rTable.fnAddData(data);
                 set_color_classes(table);
-                $(table).find('td').filter('td:last-child').addClass('truncated');
+                var lastChildren = $(table).find('td').filter('td:last-child');
+                lastChildren.addClass('truncated');
+                lastChildren.each(function() {
+                    $(this).attr("title", $(this).text());
+                });
 
                 return false;
 
