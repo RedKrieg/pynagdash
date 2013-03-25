@@ -47,7 +47,7 @@ def humantime(timedelta):
     else:
         return "%ds" % seconds
 
-def parse_row(service_dict):
+def parse_row(service_dict, host_name = None, service_description = None):
     """Parses out important service data to a tuple"""
     state_val = service_dict['current_state']
     if state_val == STATE_OK:
@@ -62,8 +62,12 @@ def parse_row(service_dict):
         state_name = "ACKNOWLEDGED"
     state_column = 'last_state_change'
     duration = time.time() - service_dict[state_column]
-    host_column = service_dict['host_name'] if 'NAG_BASE_URL' not in app.config else render_template('nag_link.html', host=service_dict['host_name'], linktype="host")
-    service_column = service_dict['service_description'] if 'NAG_BASE_URL' not in app.config else render_template('nag_link.html', host=service_dict['host_name'], service=service_dict['service_description'], linktype="service")
+    if host_name is None:
+        host_name = service_dict['host_name']
+    if service_description is None:
+        service_description = service_dict['service_description']
+    host_column = host_name if 'NAG_BASE_URL' not in app.config else render_template('nag_link.html', host=host_name, linktype="host")
+    service_column = service_description if 'NAG_BASE_URL' not in app.config else render_template('nag_link.html', host=host_name, service=service_description, linktype="service")
     flapping = "<img class='flapping' alt='Service is flapping' src='%s' />" % url_for('static', filename='sort.png') if service_dict['is_flapping'] == 1 else ""
     return (host_column,
             service_column,
@@ -439,8 +443,12 @@ def api_json(nag_status = None, level = 'critical', allow_host = False):
     output_array = []
     for host in nag_status:
         for service in nag_status[host]:
-            if service != 'HOST' or allow_host:
+            if service != 'HOST':
                 output_array.append(parse_row(nag_status[host][service]))
+            elif allow_host:
+                output_array.append(parse_row(nag_status[host][service],
+                                              host_name=host,
+                                              service_description=service))
     return json.dumps(output_array)
 
 def chain_data(last_value, operator, next_value):
@@ -527,15 +535,21 @@ def filter_data(filter, nag_data = None, level = 'critical'):
 @app.route("/api/filter/<filter>/<level>")
 @app.route("/api/filter/<filter>/<format>/<level>")
 @require_login
-def api_filter(filter, level = 'warning', format = 'json'):
+def api_filter(filter, level = 'warning', format = 'json', show_if_down = False):
     """filters data and formats/chooses level if requested"""
     filter = filter.lower()
+    if not show_if_down:
+        down_hosts = api_host(level='warning', format='raw')
     if filter in [ view['NAME'] for view in filter_names() ]:
         if format == 'json' and re.match('[a-z]+$', level):
-            #Adding caching with 1 second timeout because requests tend to bunch together
+            #Adding caching with 5 second timeout because requests tend to bunch together
             nag_status = cache.get('filtered-%s-%s' % (filter, level))
             if nag_status is None:
                 nag_status = filter_data(filter, level = level)
+                if not show_if_down:
+                    for host in nag_status.keys():
+                        if host in down_hosts:
+                            del nag_status[host]
                 cache.set('filtered-%s-%s' % (filter, level), nag_status,
                           timeout=5)
             return api_json(nag_status)
@@ -550,22 +564,30 @@ def api_filter(filter, level = 'warning', format = 'json'):
 @require_login
 def api_host(level = 'warning', format = 'json'):
     """Returns HOST statuses filtered by <level> in format <format>"""
-    if format == 'json' and re.match('[a-z]+$', level):
-        nag_status = cache.get('host-%s' % (level))
-        if nag_status is None:
+    if re.match('[a-z]+$', level):
+        nag_data = cache.get('host-%s' % (level))
+        if nag_data is None:
             cache_level = parse_level(level)
             nag_data = cached_nag_status(level = cache_level)
             for host in nag_data.keys():
                 for service in nag_data[host].keys():
-                    if service != 'HOST':
+                    if not host in nag_data:
+                        continue
+                    elif service != 'HOST':
                         del nag_data[host][service]
+                        continue
+                    elif nag_data[host][service]['current_state'] < cache_level:
+                        del nag_data[host]
                         continue
                     # This is because nagios says HOST DOWN is 1 but all other
                     # criticals are 2.
-                    elif nag_data[host][service]['current_state'] > 0:
+                    elif nag_data[host][service]['current_state'] == 1:
                         nag_data[host][service]['current_state'] = 2
             cache.set('host-%s' % (level), nag_data, timeout=5)
-        return api_json(nag_data, allow_host = True)
+        if format == "json":
+            return api_json(nag_data, allow_host = True)
+        elif format == "raw":
+            return nag_data
     else:
         return """Didn't match regex"""
 
