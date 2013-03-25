@@ -432,14 +432,14 @@ def save_filter():
 @app.route("/api/json")
 @app.route("/api/json/<level>")
 @require_login
-def api_json(nag_status = None, level = 'critical'):
+def api_json(nag_status = None, level = 'critical', allow_host = False):
     if not nag_status:
         cache_level = parse_level(level)
         nag_status = cached_nag_status(level=cache_level)
     output_array = []
     for host in nag_status:
         for service in nag_status[host]:
-            if service != 'HOST':
+            if service != 'HOST' or allow_host:
                 output_array.append(parse_row(nag_status[host][service]))
     return json.dumps(output_array)
 
@@ -536,16 +536,41 @@ def api_filter(filter, level = 'warning', format = 'json'):
             nag_status = cache.get('filtered-%s-%s' % (filter, level))
             if nag_status is None:
                 nag_status = filter_data(filter, level = level)
-                cache.set('filtered-%s-%s' % (filter, level), nag_status, timeout=1)
+                cache.set('filtered-%s-%s' % (filter, level), nag_status,
+                          timeout=5)
             return api_json(nag_status)
         else:
             return """Didn't match regex"""
     else:
         return """filter wasn't in names.  %s""" % filter_names()
-    return """dunno"""
+
+@app.route("/api/host")
+@app.route("/api/host/<level>")
+@app.route("/api/host/<level>/<format>")
+@require_login
+def api_host(level = 'warning', format = 'json'):
+    """Returns HOST statuses filtered by <level> in format <format>"""
+    if format == 'json' and re.match('[a-z]+$', level):
+        nag_status = cache.get('host-%s' % (level))
+        if nag_status is None:
+            cache_level = parse_level(level)
+            nag_data = cached_nag_status(level = cache_level)
+            for host in nag_data.keys():
+                for service in nag_data[host].keys():
+                    if service != 'HOST':
+                        del nag_data[host][service]
+                        continue
+                    # This is because nagios says HOST DOWN is 1 but all other
+                    # criticals are 2.
+                    elif nag_data[host][service]['current_state'] > 0:
+                        nag_data[host][service]['current_state'] = 2
+            cache.set('host-%s' % (level), nag_data, timeout=5)
+        return api_json(nag_data, allow_host = True)
+    else:
+        return """Didn't match regex"""
 
 if __name__ == "__main__":
     if 'HOST' in app.config:
-        app.run(host=app.config['HOST'])
+        app.run(host=app.config['HOST'], debug=True)
     else:
         app.run()
