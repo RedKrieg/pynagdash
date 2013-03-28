@@ -79,7 +79,7 @@
             }
 
             function filter_table( view ) {
-                $("#view_table_" + view).dataTable().fnFilter(
+                $(".view_table_" + view).dataTable().fnFilter(
                     $("#filter_box_" + view).val(),
                     null,
                     true,
@@ -87,6 +87,9 @@
                     false,
                     true
                 );
+                $(".view_table_" + view).each(function() {
+                    set_color_classes(this);
+                });
             }
 
             $(document).ready(function() {

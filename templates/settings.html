@@ -6,4 +6,11 @@
 <li><a href="{{ url_for('edit_users') }}">Edit Users</a></li>
 <li><a href="{{ url_for('edit_user', username=session['username']) }}">My Account</a></li>
 </ul>
+<br /><br />
+Tips:
+<br />
+<ul>
+    <li>Search boxes allow regex (using pipes, match groups, etc)</li>
+    <li>To invert a match, use "^(?!.*SEARCH STRING)".  Any lines matching SEARCH STRING will be removed.</li>
+</ul>
 {% endblock %}

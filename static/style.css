@@ -83,6 +83,9 @@ h1.tabletitle {
 a:hover {
     text-decoration: underline;
 }
+.dataTables_filter {
+    display: none;
+}
 /* form */
 form {
     text-align: center;

@@ -1,6 +1,8 @@
         <h1 class="tabletitle">{{ description }}</h1>
-        <table name="view_table_{{ view }}" cellspacing="1" class="viewtable">
-            <input id="filter_box_{{ view }}" name="filter_box_{{ view }}">
+        <table cellspacing="1" class="viewtable view_table_{{ view }}">
+            <label>Search:
+                <input id="filter_box_{{ view }}" name="filter_box_{{ view }}">
+            </label>
             <thead>
                 <tr>
                     <th>Host</th>
