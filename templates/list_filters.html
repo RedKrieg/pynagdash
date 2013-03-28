@@ -19,6 +19,8 @@ $(document).ready(function() {
                 $(this).find('a').text()
             );
         });
+        //logging to debug this function's "order" issue.
+        console.log(filterNames);
         $.post('{{ url_for('list_filters') }}', { 'views': filterNames }, function(data) {
             if ( data.indexOf("success") == -1 ) {
                 $('#msgBox div').text("Couldn't update filters!  Check login and the backend!")

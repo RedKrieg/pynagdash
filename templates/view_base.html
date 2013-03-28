@@ -78,6 +78,17 @@
                 $(".flapping").fadeToggle('fast');
             }
 
+            function filter_table( view ) {
+                $("#view_table_" + view).dataTable().fnFilter(
+                    $("#filter_box_" + view).val(),
+                    null,
+                    true,
+                    false,
+                    false,
+                    true
+                );
+            }
+
             $(document).ready(function() {
                 {% block js_document_ready %}
                 $('#msgBox div').hide();
@@ -119,7 +130,10 @@
                         $(".acknowledged").addClass("hidden");
                     }
                 });
-
+                
+                {% for view in session['views'] %}
+                $("#filter_box_{{ view }}").keyup(function() { filter_table("{{ view }}"); } );
+                {% endfor %}
                 {% endblock %}
             });
 

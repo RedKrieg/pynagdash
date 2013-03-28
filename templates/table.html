@@ -1,5 +1,6 @@
         <h1 class="tabletitle">{{ description }}</h1>
-        <table cellspacing="1" class="viewtable">
+        <table name="view_table_{{ view }}" cellspacing="1" class="viewtable">
+            <input id="filter_box_{{ view }}" name="filter_box_{{ view }}">
             <thead>
                 <tr>
                     <th>Host</th>
