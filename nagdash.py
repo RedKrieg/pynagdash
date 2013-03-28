@@ -158,7 +158,7 @@ def update_user(username, password=None, admin=None, disabled=None, viewlist=Non
     if disabled is not None:
         user['DISABLED'] = disabled
     if viewlist is not None:
-        user['VIEWLIST'] = viewlist
+        user['VIEWLIST'] = ",".join(viewlist)
     query_db("update users set `PASSWORD` = ?, `ADMIN` = ?, `DISABLED` = ?, `VIEWLIST` = ? where USER = ?", [ user['PASSWORD'], user['ADMIN'], user['DISABLED'], user['VIEWLIST'], user['USER'] ])
     g.db.commit()
     return True
@@ -210,7 +210,8 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 def init_views():
-    session['views'] = [ {  } for view in parse_viewlist(get_user(session['username'])) ]
+    print parse_viewlist(get_user(session['username']))
+    session['views'] = [ view for view in parse_viewlist(get_user(session['username'])) ]
 
 def filter_names():
     #leaving this here in case I want to offer admins the option to import new filters later
@@ -285,6 +286,7 @@ def parse_filter(raw_columns):
 def show_view(view_name):
     if view_name == 'index':
         if 'views' not in session:
+            init_views()
             return redirect(url_for('list_filters'))
         return render_template('view_base.html', get_description = get_description)
     return 'not implemented'
@@ -300,9 +302,9 @@ def list_filters(error=""):
     if 'submit' in request.form:
         session['views'] = [ filter for filter in request.form if filter != 'submit' ]
         error = "Updated form listing."
-    elif 'views' in request.form:
-        update_user(session['username'], viewlist=request.form.getlist('views'))
-        print json.dumps(request.form)
+    elif 'views[]' in request.form:
+        update_user(session['username'], viewlist=request.form.getlist('views[]'))
+        init_views()
         return 'success'
     filter_list = [ filter for filter in filter_names() if not filter['NAME'].endswith('liveeditor') ]
     return render_template('list_filters.html', filter_list = filter_list, error = error)
