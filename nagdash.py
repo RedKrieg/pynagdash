@@ -210,8 +210,15 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 def init_views():
-    print parse_viewlist(get_user(session['username']))
-    session['views'] = [ view for view in parse_viewlist(get_user(session['username'])) ]
+    view_list = parse_viewlist(get_user(session['username']))
+    if len(view_list) > 0 and len(view_list[0]) > 0:
+        session['views'] = parse_viewlist(get_user(session['username']))
+    else:
+        update_user(username=session['username'],
+                    viewlist=app.config['DEFAULT_VIEWS'])
+        session['views'] = app.config['DEFAULT_VIEWS']
+
+    print session['views'], app.config['DEFAULT_VIEWS']
 
 def filter_names():
     #leaving this here in case I want to offer admins the option to import new filters later
@@ -287,7 +294,6 @@ def show_view(view_name):
     if view_name == 'index':
         if 'views' not in session:
             init_views()
-            return redirect(url_for('list_filters'))
         return render_template('view_base.html', get_description = get_description)
     return 'not implemented'
 
@@ -306,7 +312,7 @@ def list_filters(error=""):
         update_user(session['username'], viewlist=request.form.getlist('views[]'))
         init_views()
         return 'success'
-    filter_list = [ filter for filter in filter_names() if not filter['NAME'].endswith('liveeditor') ]
+    filter_list = [ i for i in filter_names() if not i['NAME'].endswith('liveeditor') ]
     return render_template('list_filters.html', filter_list = filter_list, error = error)
 
 @app.route("/edit/users", methods=['GET', 'POST'])
