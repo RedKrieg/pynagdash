@@ -90,24 +90,25 @@ a:hover {
 form {
     text-align: center;
 }
-form fieldset {
+/* fieldset */
+fieldset {
     border-radius: 5;
     display: inline-block;
     text-align: left;
     background-color: #D0E0F0
 }
-form fieldset label {
+fieldset label {
     text-align: right;
     margin-right: 1em;
     width: 4em;
     float: left;
     display: block;
 }
-form fieldset input {
+fieldset input {
     text-align: left;
     margin-left: 1em;
 }
-form fieldset legend {
+fieldset legend {
     border-radius: 5;
     border: 2px groove threedface;
     background-color: #A0C0F0;
@@ -210,9 +211,12 @@ div.disabled {
     width: 8em;
 }
 /* view selector */
+.viewselect_container {
+    text-align: center;
+}
 .viewselect {
     display: inline-block;
-    width: 40%;
+    text-align: left;
 }
 .viewselect ul {
     border: 2px groove threedface;

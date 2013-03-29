@@ -48,57 +48,53 @@ $(document).ready(function() {
 {% endblock %}
 {% block content %}
 <div id="msgBox"><div></div></div>
-<form id = 'filterlist' action = "{{ url_for('list_filters') }}" method='post'>
-    <fieldset>
-        <legend>Filters</legend>
-        {% for filter in filter_list %}
-        <div class="filter">
-            <div class="filtername">
-                <input type="checkbox" {% if filter['NAME'] in session['views'] %}checked = "checked" {% endif %}name="{{ filter['NAME'] }}" value="{{ filter['NAME'] }}" /><a href="{{ url_for('edit_filter', filtername = filter['NAME']) }}">{{ filter['NAME'] }}</a>:
-            </div>
-            <div class="filterdesc">
-                {{- filter['DESCRIPTION'] -}}
-            </div>
-        </div><br />
-        {% endfor %}
-        <input type='submit' name='submit' value='Submit' /><a href="{{ url_for('edit_filter') }}">Create a new filter</a>
-        {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
-    </fieldset>
-</form>
-Incomplete, do not use:
-<div class="viewselect">
-    Available views:<br />
-    <ul id="availableviews" class="connectedSortable">
-        {% for filter in filter_list %}
-        {% if filter['NAME'] not in session['views'] %}
-        <li class="filter">
-            <div class="filtername">
-                <a href="{{ url_for('edit_filter', filtername = filter['NAME']) }}">{{ filter['NAME'] }}</a>
-            </div>
-            <div class="filterdesc">
-                {{- filter['DESCRIPTION'] -}}
-            </div>
-        </li>
-        {% endif %}
-        {% endfor %}
-    </ul>
+<div class="viewselect_container">
+    <div class="viewselect">
+        <fieldset>
+            <legend>Available views</legend>
+            <ul id="availableviews" class="connectedSortable">
+                {% for filter_object in filter_list %}
+                {% if filter_object['NAME'] not in session['views'] %}
+                <li class="filter">
+                    <div class="filtername">
+                        <a href="{{ url_for('edit_filter', filtername = filter_object['NAME']) }}">{{ filter_object['NAME'] }}</a>
+                    </div>
+                    <div class="filterdesc">
+                        {{- filter_object['DESCRIPTION'] -}}
+                    </div>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </fieldset>
+    </div>
+    <div class="viewselect">
+        <fieldset>
+            <legend>Your views</legend>
+            <ul id="myviews" class="connectedSortable">
+                {% for filter_object_name in session['views'] %}
+                <li class="filter">
+                    <div class="filtername">
+                        <a href="{{ url_for('edit_filter', filtername = filter_object_name) }}">{{ filter_object_name }}</a>
+                    </div>
+                    <div class="filterdesc">
+                        {% for filter_object in filter_list %}
+                        {% if filter_object['NAME'] == filter_object_name %}
+                        {{- filter_object['DESCRIPTION'] -}}
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </fieldset>
+    </div>
+    <div class="controls">
+        <ul>
+            <a href="#" id="saveviews">Save views</a>
+            <a href="{{ url_for('edit_filter') }}">Create a new filter</a>
+            {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
+        </ul>
+    </div>
 </div>
-<div class="viewselect">
-    Your views:<br />
-    <ul id="myviews" class="connectedSortable">
-        {% for filter in filter_list %}
-        {% if filter['NAME'] in session['views'] %}
-        <li class="filter">
-            <div class="filtername">
-                <a href="{{ url_for('edit_filter', filtername = filter['NAME']) }}">{{ filter['NAME'] }}</a>
-            </div>
-            <div class="filterdesc">
-                {{- filter['DESCRIPTION'] -}}
-            </div>
-        </li>
-        {% endif %}
-        {% endfor %}
-    </ul>
-</div>
-<a href="#" id="saveviews">Save views</a>
 {% endblock %}
