@@ -91,10 +91,10 @@ $(document).ready(function() {
     </div>
     <div class="controls">
         <ul>
-            <a href="#" id="saveviews">Save views</a>
-            <a href="{{ url_for('edit_filter') }}">Create a new filter</a>
-            {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
+            <li><a href="#" id="saveviews">Save views</a></li>
+            <li><a href="{{ url_for('edit_filter') }}">Create a new filter</a></li>
         </ul>
     </div>
+    {% if error is not none and error != "" > 0 %}<br /><div class='error'>{{ error }}</div>{% endif %}
 </div>
 {% endblock %}

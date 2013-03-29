@@ -72,6 +72,11 @@ setInterval('updateLiveFilter()',20000);
         </div>
         {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
         <input type='submit' name='submit' value='Submit' />
+        {% if title is not none %}
+        <div class="rightalign_border">
+            <a href="{{ url_for('delete_filter', title=title) }}">Delete Filter</a>
+        </div>
+        {% endif %}
     </fieldset>
 </form>
 {{ super() }}

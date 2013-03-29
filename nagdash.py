@@ -306,7 +306,7 @@ def settings():
 @require_login
 def list_filters(error=""):
     if 'submit' in request.form:
-        session['views'] = [ filter for filter in request.form if filter != 'submit' ]
+        session['views'] = [ i for i in request.form if i != 'submit' ]
         error = "Updated form listing."
     elif 'views[]' in request.form:
         update_user(session['username'], viewlist=request.form.getlist('views[]'))
@@ -441,6 +441,13 @@ def save_filter():
     with app.open_instance_resource('filters/%s.json' % filtername, mode='w') as f:
         json.dump(parsed_data, f, indent=4)
     return redirect(url_for('list_filters', error="Saved filter %s" % filtername))
+
+@app.route("/api/deletefilter/<title>")
+@require_admin
+def delete_filter(title):
+    query_db('delete from views where NAME = ?', [title], one=True)
+    g.db.commit()
+    return redirect(url_for('list_filters', error="Deleted filter %s" % title))
 
 @app.route("/api/json")
 @app.route("/api/json/<level>")
