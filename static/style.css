@@ -143,7 +143,6 @@ fieldset legend {
 }
 /*divs*/
 #msgBox {
-    display: none;
     text-align: center;
     position: relative;
 }

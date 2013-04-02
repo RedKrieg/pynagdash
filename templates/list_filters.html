@@ -5,45 +5,44 @@
 <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.9.1.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='jquery-ui.js') }}"></script>
 <script type="text/javascript" id="js">
-$(document).ready(function() {
-    $(function() {
-        $("#availableviews, #myviews").sortable({
-            connectWith: ".connectedSortable"
-        }).disableSelection();
-    });
-
-    $("#saveviews").click(function() {
-        var filterNames = [];
-        $("#myviews li").each(function(i) {
-            filterNames.push(
-                $(this).find('a').text()
-            );
+    $(document).ready(function() {
+        $(function() {
+            $("#availableviews, #myviews").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
         });
-        //logging to debug this function's "order" issue.
-        console.log(filterNames);
-        $.post('{{ url_for('list_filters') }}', { 'views': filterNames }, function(data) {
-            if ( data.indexOf("success") == -1 ) {
+        $("#msgBox div").slideUp('fast');
+
+        $("#saveviews").click(function() {
+            var filterNames = [];
+            $("#myviews li").each(function(i) {
+                filterNames.push(
+                    $(this).find('a').text()
+                );
+            });
+            $.post('{{ url_for('list_filters') }}', { 'views': filterNames }, function(data) {
+                if ( data.indexOf("success") == -1 ) {
+                    $('#msgBox div').text("Couldn't update filters!  Check login and the backend!")
+                        .slideDown('medium')
+                        .delay(3000)
+                        .slideUp('medium');
+                } else {
+                    $('#msgBox div').addClass("success")
+                        .text("Saved your filters!")
+                        .slideDown('medium')
+                        .delay(3000)
+                        .slideUp('medium')
+                        .removeClass("success");
+                }
+            }).error(function() {
+
                 $('#msgBox div').text("Couldn't update filters!  Check login and the backend!")
                     .slideDown('medium')
                     .delay(3000)
                     .slideUp('medium');
-            } else {
-                $('#msgBox div').addClass("success")
-                    .text("Saved your filters!")
-                    .slideDown('medium')
-                    .delay(3000)
-                    .slideUp('medium')
-                    .removeClass("success");
-            }
-        }).error(function() {
-
-            $('#msgBox div').text("Couldn't update filters!  Check login and the backend!")
-                .slideDown('medium')
-                .delay(3000)
-                .slideUp('medium');
-        });;
+            });;
+        });
     });
-});
 </script>
 {% endblock %}
 {% block content %}

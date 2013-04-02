@@ -218,8 +218,6 @@ def init_views():
                     viewlist=app.config['DEFAULT_VIEWS'])
         session['views'] = app.config['DEFAULT_VIEWS']
 
-    print session['views'], app.config['DEFAULT_VIEWS']
-
 def filter_names():
     #leaving this here in case I want to offer admins the option to import new filters later
     #return [item[:-5] for item in os.listdir(os.path.join(app.instance_path, 'filters')) if item.endswith('.json') and not item.endswith('liveeditor.json')]
