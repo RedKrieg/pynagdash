@@ -453,7 +453,7 @@ def delete_filter(title):
 @app.route("/api/json/<level>")
 @require_login
 def api_json(nag_status = None, level = 'critical', allow_host = False):
-    if not nag_status:
+    if nag_status is None:
         cache_level = parse_level(level)
         nag_status = cached_nag_status(level=cache_level)
     output_array = []
