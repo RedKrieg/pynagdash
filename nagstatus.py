@@ -53,6 +53,7 @@ def get_nag_status(filename, threshold = 0):
                     host_statuses[this_host][this_service] = {}
                     host_statuses[this_host][this_service][this_property] = value #handy place to have the service description and host name
                     host_statuses[this_host][this_service]['host_name'] = this_host
+                    host_statuses[this_host][this_service]['service_comments'] = {}
                 else:
                     host_statuses[this_host][this_service][this_property] = try_to_convert(value)
                     if this_property == 'current_state' and host_statuses[this_host][this_service][this_property] < threshold:
@@ -60,6 +61,22 @@ def get_nag_status(filename, threshold = 0):
                         del host_statuses[this_host][this_service]
                     elif this_property == 'last_state_change':
                         host_statuses[this_host][this_service]['current_duration'] = time.time() - try_to_convert(value)
+            elif group_type == 'servicecomment':
+                if this_property == 'host_name':
+                    this_host = value
+                elif this_property == 'service_description':
+                    this_service = value
+                elif this_property == 'entry_type':
+                    # Need to hang on to this one for one more line
+                    this_entry_type = try_to_convert(value)
+                elif this_property == 'comment_id':
+                    this_comment_id = value
+                    host_statuses[this_host][this_service]['service_comments'][value] = {
+                        'entry_type': this_entry_type,
+                        'comment_id': this_comment_id
+                    }
+                else:
+                    host_statuses[this_host][this_service]['service_comments'][this_comment_id][this_property] = try_to_convert(value)
         except:
             pass
     f.close()

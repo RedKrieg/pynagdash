@@ -66,8 +66,29 @@ def parse_row(service_dict, host_name = None, service_description = None):
         host_name = service_dict['host_name']
     if service_description is None:
         service_description = service_dict['service_description']
+    comment_list = []
+    for comment in service_dict['service_comments']:
+        comment_obj = service_dict['service_comments'][comment]
+        comment_list.append(
+            "%s commented %s ago: %s" % (
+                comment_obj['author'],
+                humantime(time.time() - comment_obj['entry_time']),
+                comment_obj['comment_data']
+            )
+        )
+    comment_block = "<br />".join(comment_list)
+    show_comment = False
+    if len(comment_list) > 0:
+        show_comment = True
     host_column = host_name if 'NAG_BASE_URL' not in app.config else render_template('nag_link.html', host=host_name, linktype="host")
-    service_column = service_description if 'NAG_BASE_URL' not in app.config else render_template('nag_link.html', host=host_name, service=service_description, linktype="service")
+    service_column = service_description if 'NAG_BASE_URL' not in app.config else render_template(
+        'nag_link.html',
+        host=host_name,
+        service=service_description,
+        linktype="service",
+        comment_block=comment_block,
+        show_comment=show_comment
+    )
     flapping = "<img class='flapping' alt='Service is flapping' src='%s' />" % url_for('static', filename='sort.png') if service_dict['is_flapping'] == 1 else ""
     return (host_column,
             service_column,

@@ -46,7 +46,9 @@
                 var lastChildren = $(table).find('td');
                 lastChildren.addClass('truncated');
                 lastChildren.each(function() {
-                    $(this).attr("title", $(this).text());
+                    if ($(this).attr("title") == undefined) {
+                        $(this).attr("title", $(this).text());
+                    }
                 });
 
                 return false;
