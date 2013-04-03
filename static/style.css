@@ -93,9 +93,12 @@ form {
 /* fieldset */
 fieldset {
     border-radius: 5;
-    display: inline-block;
+    display: block;
     text-align: left;
     background-color: #D0E0F0
+}
+.formfieldset {
+    display: inline-block;
 }
 fieldset label {
     text-align: right;
@@ -127,14 +130,8 @@ fieldset legend {
     border-radius: 5px;
     background-color: #D0E0F0;
 }
-/* border stuff */
-.rightalign_border {
-    text-align: right;
-    border: 1px solid;
-    display: inline-block;
-    padding: 5px;
-    border-radius: 5px;
-    background-color: #D0E0F0;
+.centered {
+    text-align: center;
 }
 /* errors */
 .error {

@@ -2,7 +2,7 @@
 {% block title %}Login{% endblock %}
 {% block content %}
 <form id='login' action = "{{ url_for('login', next=next) }}" method='post'>
-    <fieldset>
+    <fieldset class="formfieldset">
         <legend>Login</legend>
         <label for='username' >Username:</label>
         <input type='text' name='username' id='username'  maxlength="50" /><br />

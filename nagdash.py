@@ -377,6 +377,22 @@ def edit_user(username, error=""):
     
     return render_template('edit_user.html', user=user, error=error)
 
+@app.route("/create/user", methods=['GET', 'POST'])
+@require_admin
+def create_user_page(error = ""):
+    if 'error' in request.args:
+        error = request.args['error']
+    if 'submit' in request.form:
+        if request.form['password1'] == request.form['password2']:
+            create_user(request.form['username'], request.form['password1'])
+            error = "User created"
+        else:
+            error = "Passwords must match"
+        return redirect(url_for('create_user_page', error=error))
+    else:
+        user = { 'USER': '', 'PASSWORD': '', 'ADMIN': 0, 'DISABLED': 0 }
+        return render_template('create_user.html', user=user, error=error)
+
 def filter_to_form(data, service_fields, operators, chain_rules):
     mydata = ""
     if data is None:

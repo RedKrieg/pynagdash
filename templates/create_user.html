@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Editing {{ user['USER'] }}{% endblock %}
+{% block title %}Creating User{% endblock %}
 {% block content %}
-<form id='user' action = "{{ url_for('edit_user', username=user['USER']) }}" method='post'>
+<form id='user' action = "{{ url_for('create_user_page') }}" method='post'>
     <fieldset class="formfieldset">
-        <legend>Edit User</legend>
+        <legend>Create User</legend>
         <label for='username' >Username:</label>
         <input type='text' name='username' id='username' value="{{ user['USER'] }}" maxlength="50" /><br />
         <label for='password1' >Password:</label>

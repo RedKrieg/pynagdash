@@ -2,7 +2,7 @@
 {% block title %}User List{% endblock %}
 {% block content %}
 <form id='users' action = "{{ url_for('edit_users') }}" method='post'>
-    <fieldset>
+    <fieldset class="formfieldset">
         <legend>Users</legend>
         {% for user in user_list %}
         <div class="user">
@@ -24,5 +24,10 @@
         <input type='submit' name='submit' value='Submit' />
         {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
     </fieldset>
+    <div class="controls">
+        <ul>
+            <li><a href="{{ url_for('create_user_page') }}">Create a new user</a></li>
+        </ul>
+    </div>
 </form>
 {% endblock %}

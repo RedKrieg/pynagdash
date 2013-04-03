@@ -59,9 +59,9 @@ setInterval('updateLiveFilter()',20000);
 {% block title %}Filter Editor{% endblock %}
 {% block content %}
 <form id='filter' action = "{{ url_for('save_filter') }}" method='post'>
-    <fieldset>
+    <fieldset class="formfieldset">
         <legend>Filter</legend>
-        <label for='title'>Title:</label><input type="text" maxlength="64" name="title" id="title" {% if title is not none %}value="{{ title }}"{% endif %} />
+        <label for='title'>Title:</label><input type="text" maxlength="64" name="title" id="title" {% if title is not none %}value="{{ title }}"{% endif %} /><br />
         <label for='description'>Description:</label><input type="text" maxlength="512" name="description" id="description" {% if description is not none %} value="{{ description }}" {% endif %}/><br />
         <div id="filterlist">
         {% if title is not none %}
@@ -72,12 +72,14 @@ setInterval('updateLiveFilter()',20000);
         </div>
         {% if error is not none %}<br /><div class='error'>{{ error }}</div>{% endif %}
         <input type='submit' name='submit' value='Submit' />
-        {% if title is not none %}
-        <div class="rightalign_border">
-            <a href="{{ url_for('delete_filter', title=title) }}">Delete Filter</a>
-        </div>
-        {% endif %}
     </fieldset>
+    {% if title is not none %}
+    <div class="controls centered">
+        <ul>
+            <li><a href="{{ url_for('delete_filter', title=title) }}">Delete Filter</a></li>
+        </ul>
+    </div>
+    {% endif %}
 </form>
 {{ super() }}
 {% endblock %}
