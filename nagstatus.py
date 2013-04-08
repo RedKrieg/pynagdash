@@ -42,6 +42,7 @@ def get_nag_status(filename, threshold = 0):
                     this_host = value
                     host_statuses[this_host] = {}
                     host_statuses[this_host]['HOST'] = {}
+                    host_statuses[this_host]['HOST']['service_comments'] = {}
                 else:
                     host_statuses[this_host]['HOST'][this_property] = try_to_convert(value)
             elif group_type == 'servicestatus':
@@ -66,6 +67,21 @@ def get_nag_status(filename, threshold = 0):
                     this_host = value
                 elif this_property == 'service_description':
                     this_service = value
+                elif this_property == 'entry_type':
+                    # Need to hang on to this one for one more line
+                    this_entry_type = try_to_convert(value)
+                elif this_property == 'comment_id':
+                    this_comment_id = value
+                    host_statuses[this_host][this_service]['service_comments'][value] = {
+                        'entry_type': this_entry_type,
+                        'comment_id': this_comment_id
+                    }
+                else:
+                    host_statuses[this_host][this_service]['service_comments'][this_comment_id][this_property] = try_to_convert(value)
+            elif group_type == 'hostcomment':
+                if this_property == 'host_name':
+                    this_host = value
+                    this_service = 'HOST'
                 elif this_property == 'entry_type':
                     # Need to hang on to this one for one more line
                     this_entry_type = try_to_convert(value)
