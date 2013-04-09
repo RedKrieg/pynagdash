@@ -44,7 +44,9 @@
                 rTable.fnAddData(data);
                 set_color_classes(table);
                 var lastChildren = $(table).find('td');
-                lastChildren.addClass('truncated');
+                if (window.innerWidth >= 850) {
+                    lastChildren.addClass('truncated');
+                }
                 lastChildren.each(function() {
                     if ($(this).attr("title") == undefined) {
                         $(this).attr("title", $(this).text());
