@@ -69,6 +69,9 @@ table.viewtable .even td {
 h1.tabletitle {
     text-align: center;
 }
+.tabletitle {
+    margin-bottom: -1em;
+}
 .host_name {
     color: #3D3D3D;
     text-decoration: none;
