@@ -7,7 +7,12 @@ def get_property(line):
     if len(line_split) < 2:
         raise Exception("Line is not a key/value pair.")
     #Ensures that all characters are valid unicode strings
-    return line_split[0].encode('utf-8', 'ignore'), u'='.join(line_split[1:])
+    key = line_split[0].encode('utf-8', 'ignore')
+    try:
+        value = u'='.join(line_split[1:])
+    except:
+        value = "DASHBOARD ERROR!  Plugin output could not be decoded due to invalid NRPE output!!!"
+    return key, value
 
 def try_to_convert(value):
     """Tries to convert [value] to an int, returns the original string on fail"""
